@@ -1,0 +1,6 @@
+{
+  "name": "Space Tarkov RPG",
+  "description": "Hardcore sci-fi extraction survival RPG set in deep space orbit and planetary moons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

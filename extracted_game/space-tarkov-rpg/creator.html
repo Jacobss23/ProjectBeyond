@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="pl">
+  <!-- === SEKCJA: HEAD === -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kreator Postaci</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Redaction+50:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- === SEKCJA: OVERLAY ANIMACJI === -->
+    <div id="transition-overlay"></div>
+
+    <!-- === SEKCJA: GŁÓWNY KONTENER GRY === -->
+    <div id="game-container">
+      <!-- === SEKCJA: KROK 1 - TOŻSAMOŚĆ === -->
+      <div id="cc-step-1" class="screen active">
+        <h2>Krok 1: Tożsamość</h2>
+
+        <div class="input-group">
+          <input
+            type="text"
+            id="cc-name"
+            placeholder=" "
+            class="cc-input custom-input"
+            autocomplete="off"
+          />
+          <label for="cc-name" class="input-label">Imię postaci</label>
+        </div>
+
+        <div class="input-group">
+          <select id="cc-gender" class="cc-input custom-input">
+            <option value="" disabled selected></option>
+            <option value="m">Mężczyzna</option>
+            <option value="f">Kobieta</option>
+          </select>
+          <label for="cc-gender" class="input-label">Płeć</label>
+        </div>
+
+        <div class="appearance-grid">
+          <button class="ph-btn" disabled>Włosy (Placeholder)</button>
+          <button class="ph-btn" disabled>Twarz (Placeholder)</button>
+          <button class="ph-btn" disabled>Ciało (Placeholder)</button>
+          <button class="ph-btn" disabled>Ciuchy 1 (Placeholder)</button>
+          <button class="ph-btn" disabled>Ciuchy 2 (Placeholder)</button>
+          <button class="ph-btn" disabled>Ciuchy 3 (Placeholder)</button>
+        </div>
+
+        <div class="nav-buttons">
+          <button
+            onclick="window.location.href = 'index.html'"
+            class="back-btn"
+          >
+            Anuluj
+          </button>
+          <button onclick="nextStep(1)">Dalej</button>
+        </div>
+      </div>
+
+      <!-- === SEKCJA: KROK 2 - POCHODZENIE === -->
+      <div id="cc-step-2" class="screen hidden">
+        <h2>Krok 2: Pochodzenie</h2>
+        <div class="options-grid">
+          <button
+            class="select-btn planet-trappist"
+            onclick="selectOption('planet', 'TRAPPIST-1 e', this)"
+          >
+            TRAPPIST-1 e
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Zimna, skalista planeta. +10% odporności na mróz.</span
+              ></span
+            >
+          </button>
+          <button
+            class="select-btn planet-kepler"
+            onclick="selectOption('planet', 'Kepler-452 b', this)"
+          >
+            Kepler-452 b
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Wysoka grawitacja. +1 rząd w plecaku, wolniejszy bieg.</span
+              ></span
+            >
+          </button>
+          <button
+            class="select-btn planet-ross"
+            onclick="selectOption('planet', 'Ross-128 b', this)"
+          >
+            Ross-128 b
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Aktywna gwiazda. +15% odporności na promieniowanie.</span
+              ></span
+            >
+          </button>
+        </div>
+        <div class="nav-buttons">
+          <button onclick="showScreen('cc-step-1')" class="back-btn">
+            Wróć
+          </button>
+          <button onclick="nextStep(2)">Dalej</button>
+        </div>
+      </div>
+
+      <!-- === SEKCJA: KROK 3 - CECHY === -->
+      <div id="cc-step-3" class="screen hidden">
+        <h2>Krok 3: Cechy (Min. 0 pkt)</h2>
+        <div class="points-display">
+          Punkty: <span id="trait-points">-3</span>
+        </div>
+
+        <div class="traits-container">
+          <div class="trait-column">
+            <h3>Pozytywne</h3>
+            <button
+              class="trait-btn trait-pos"
+              onclick="toggleTrait('Silny', -4, this)"
+            >
+              Silny (-4)
+              <span class="tooltip"
+                ><span class="q-mark">?</span
+                ><span class="tooltip-text"
+                  >Większy plecak (+1 rząd) i obrażenia w walce wręcz.</span
+                ></span
+              >
+            </button>
+            <button
+              class="trait-btn trait-pos"
+              onclick="toggleTrait('Bystry', -3, this)"
+            >
+              Bystry (-3)
+              <span class="tooltip"
+                ><span class="q-mark">?</span
+                ><span class="tooltip-text"
+                  >Szybsze zdobywanie doświadczenia.</span
+                ></span
+              >
+            </button>
+          </div>
+          <div class="trait-column">
+            <h3>Negatywne</h3>
+            <button
+              class="trait-btn trait-neg"
+              onclick="toggleTrait('Astmatyk', 4, this)"
+            >
+              Astmatyk (+4)
+              <span class="tooltip"
+                ><span class="q-mark">?</span
+                ><span class="tooltip-text"
+                  >Szybciej tracisz wytrzymałość podczas biegu.</span
+                ></span
+              >
+            </button>
+            <button
+              class="trait-btn trait-neg"
+              onclick="toggleTrait('Pechowiec', 3, this)"
+            >
+              Pechowiec (+3)
+              <span class="tooltip"
+                ><span class="q-mark">?</span
+                ><span class="tooltip-text"
+                  >Mniejsza szansa na rzadki loot.</span
+                ></span
+              >
+            </button>
+            <button
+              class="trait-btn trait-neg"
+              onclick="toggleTrait('Krótkowidz', 2, this)"
+            >
+              Krótkowidz (+2)
+              <span class="tooltip"
+                ><span class="q-mark">?</span
+                ><span class="tooltip-text"
+                  >Mniejsza celność z broni palnej na dystans.</span
+                ></span
+              >
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-buttons">
+          <button onclick="showScreen('cc-step-2')" class="back-btn">
+            Wróć
+          </button>
+          <button id="btn-step3-next" onclick="nextStep(3)" disabled>
+            Dalej
+          </button>
+        </div>
+      </div>
+
+      <!-- === SEKCJA: KROK 4 - KATASTROFA I STATEK === -->
+      <div id="cc-step-4" class="screen hidden">
+        <h2>Krok 4: Katastrofa</h2>
+
+        <h3>Twój Statek (Zestaw)</h3>
+        <div class="options-grid">
+          <button
+            class="select-btn kit-btn"
+            onclick="selectOption('kit', 'Lekki Frachtowiec', this)"
+          >
+            Lekki Frachtowiec
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Statek handlowy. Więcej racji żywnościowych i zapasów
+                medycznych.</span
+              ></span
+            >
+          </button>
+          <button
+            class="select-btn kit-btn"
+            onclick="selectOption('kit', 'Myśliwiec Zwiadowczy', this)"
+          >
+            Myśliwiec Zwiadowczy
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Zwinny i uzbrojony. Pistolet, amunicja i uszkodzony pancerz
+                taktyczny.</span
+              ></span
+            >
+          </button>
+        </div>
+
+        <h3>Sprawny Moduł Statku</h3>
+        <div class="options-grid">
+          <button
+            class="select-btn mod-btn"
+            onclick="selectOption('module', 'Medyczny', this)"
+          >
+            Medyczny
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Pasywne leczenie ran pomiędzy rajdami.</span
+              ></span
+            >
+          </button>
+          <button
+            class="select-btn mod-btn"
+            onclick="selectOption('module', 'Warsztat', this)"
+          >
+            Warsztat
+            <span class="tooltip"
+              ><span class="q-mark">?</span
+              ><span class="tooltip-text"
+                >Pozwala na naprawę broni w bazie.</span
+              ></span
+            >
+          </button>
+        </div>
+
+        <div class="nav-buttons">
+          <button onclick="showScreen('cc-step-3')" class="back-btn">
+            Wróć
+          </button>
+          <button onclick="finishCreation()">Zakończ i Przeżyj</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === SEKCJA: SKRYPTY === -->
+    <script src="data/items.js"></script>
+    <script src="data/ship.js"></script>
+    <script src="js/grid.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/player.js"></script>
+  </body>
+</html>

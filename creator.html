@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Tarkov RPG - Kreator Postaci</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- === OVERLAY ANIMACJI === -->
+    <div id="transition-overlay"></div>
+
+    <!-- === GŁÓWNY UKŁAD Z DOKOWANYM TERMINALEM === -->
+    <div id="app-wrapper" class="split-terminal-layout">
+      <!-- === KONTENER KREATORA === -->
+      <div id="game-container" class="creator-container">
+        <!-- === KROK 1: TOŻSAMOŚĆ === -->
+        <div id="cc-step-1" class="screen active">
+          <h2>Krok 1: Tożsamość Ocalałego</h2>
+
+          <div class="input-group" style="display:flex; gap:8px; align-items:center;">
+            <div style="flex:1; position:relative;">
+              <input
+                type="text"
+                id="cc-name"
+                placeholder=" "
+                class="cc-input custom-input"
+                autocomplete="off"
+              />
+              <label for="cc-name" class="input-label">Kryptonim / Imię</label>
+            </div>
+            <button type="button" class="sm ghost" onclick="randomizeName()" style="white-space:nowrap; padding:10px 12px; height:46px;" title="Wylosuj klimatyczny kryptonim">🎲 Losuj</button>
+          </div>
+
+          <div class="input-group">
+            <select id="cc-gender" class="cc-input custom-input">
+              <option value="" disabled selected></option>
+              <option value="m">Mężczyzna</option>
+              <option value="f">Kobieta</option>
+            </select>
+            <label for="cc-gender" class="input-label">Płeć biologiczna</label>
+          </div>
+
+          <div class="appearance-grid">
+            <button class="ph-btn" disabled>Włosy: Krótkie wojskowe</button>
+            <button class="ph-btn" disabled>Twarz: Blizna taktyczna</button>
+            <button class="ph-btn" disabled>Ciało: Standardowe</button>
+            <button class="ph-btn" disabled>Kombinezon: EVA-MkII</button>
+            <button class="ph-btn" disabled>Kamuflaż: Grafitowy</button>
+            <button class="ph-btn" disabled>Insygnia: Kolonia</button>
+          </div>
+
+          <div class="nav-buttons">
+            <button onclick="window.location.href = 'index.html'" class="back-btn">
+              Anuluj
+            </button>
+            <button onclick="nextStep(1)">Dalej</button>
+          </div>
+        </div>
+
+        <!-- === KROK 2: POCHODZENIE === -->
+        <div id="cc-step-2" class="screen hidden">
+          <h2>Krok 2: Planeta Pochodzenia</h2>
+          <div class="options-grid">
+            <button
+              class="select-btn planet-trappist"
+              onclick="selectOption('planet', 'TRAPPIST-1 e', this)"
+            >
+              TRAPPIST-1 e
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Lodowy świat. +10% odporności na mróz i skrajne temperatury.</span>
+              </span>
+            </button>
+            <button
+              class="select-btn planet-kepler"
+              onclick="selectOption('planet', 'Kepler-452 b', this)"
+            >
+              Kepler-452 b
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Wysoka grawitacja. Silne mięśnie: +1 rząd w plecaku, ale nieco wolniejsza ucieczka.</span>
+              </span>
+            </button>
+            <button
+              class="select-btn planet-ross"
+              onclick="selectOption('planet', 'Ross-128 b', this)"
+            >
+              Ross-128 b
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Aktywna gwiazda. Przystosowanie do radiacji: +15% odporności na promieniowanie kosmiczne.</span>
+              </span>
+            </button>
+          </div>
+          <div class="nav-buttons">
+            <button onclick="showScreen('cc-step-1')" class="back-btn">Wróć</button>
+            <button onclick="nextStep(2)">Dalej</button>
+          </div>
+        </div>
+
+        <!-- === KROK 3: CECHY & PERKI (MIN. 0 PKT, START: -1) === -->
+        <div id="cc-step-3" class="screen hidden">
+          <h2>Krok 3: Cechy & Perki (Bilans min. 0 pkt)</h2>
+          <div class="points-display">
+            Punkty atrybutów: <span id="trait-points">-1</span>
+          </div>
+          <p class="hint" style="font-size: 0.85rem; color: #94a3b8; margin-top: -10px;">
+            Startujesz z balansem <strong>-1 pkt</strong>. Dobierz negatywne cechy (wady), aby zyskać punkty na pożądane zalety!
+          </p>
+
+          <!-- Dynamiczny kontener cech z data/perks.js & edytora admina -->
+          <div id="traits-dyn-container" class="traits-container"></div>
+
+          <div class="nav-buttons">
+            <button onclick="showScreen('cc-step-2')" class="back-btn">Wróć</button>
+            <button id="btn-step3-next" onclick="nextStep(3)" disabled>Dalej</button>
+          </div>
+        </div>
+
+        <!-- === KROK 4: KATASTROFA I STATEK === -->
+        <div id="cc-step-4" class="screen hidden">
+          <h2>Krok 4: Katastrofa & Wyposażenie</h2>
+
+          <h3>Klasa Rozbitego Statku</h3>
+          <div class="options-grid">
+            <button
+              class="select-btn kit-btn"
+              onclick="selectOption('kit', 'Lekki Frachtowiec', this)"
+            >
+              Lekki Frachtowiec
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Statek zaopatrzeniowy. Bogaty ładunek racji żywnościowych, wody i medykamentów.</span>
+              </span>
+            </button>
+            <button
+              class="select-btn kit-btn"
+              onclick="selectOption('kit', 'Myśliwiec Zwiadowczy', this)"
+            >
+              Myśliwiec Zwiadowczy
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Pojazd patrolowy. Zawiera pistolet balistyczny 9mm, zapas amunicji oraz pancerz taktyczny.</span>
+              </span>
+            </button>
+          </div>
+
+          <h3>Ocalały Moduł Bazy</h3>
+          <div class="options-grid">
+            <button
+              class="select-btn mod-btn"
+              onclick="selectOption('module', 'Medyczny', this)"
+            >
+              Medstation (Medyczny)
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Autonomiczny stół zabiegowy: pasywne leczenie ran i regeneracja HP w schronie.</span>
+              </span>
+            </button>
+            <button
+              class="select-btn mod-btn"
+              onclick="selectOption('module', 'Warsztat', this)"
+            >
+              Crafting (Warsztat)
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Stół inżynieryjny: naprawa broni, modyfikacja oporządzenia i wytwarzanie amunicji.</span>
+              </span>
+            </button>
+            <button
+              class="select-btn mod-btn"
+              onclick="selectOption('module', 'Hydroponika', this)"
+            >
+              Hydroponika (Farma)
+              <span class="tooltip">
+                <span class="q-mark">?</span>
+                <span class="tooltip-text">Autonomiczna szklarnia pokładowa: uprawa pożywienia i produkcja czystej wody.</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="nav-buttons">
+            <button onclick="showScreen('cc-step-3')" class="back-btn">Wróć</button>
+            <button onclick="finishCreation()" class="primary-btn pulse-glow">Zakończ i Ląduj na Marsie</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === ŻYWY TERMINAL TELEMETRII (Zawsze aktywny) === -->
+      <aside class="live-terminal-panel">
+        <div class="term-header">
+          <div class="term-title">
+            <span class="term-pulse-dot"></span>
+            SYS.LINK // TELEMETRIA BIONICZNA
+          </div>
+          <span class="term-badge">LIVE 60HZ</span>
+        </div>
+        <div class="term-stats-bar">
+          <div>TĘTNO: <span class="term-val anim-heart">74 BPM</span></div>
+          <div>TLEN: <span class="term-val">99.4%</span></div>
+          <div>NEURO: <span class="term-val">SYNC OK</span></div>
+        </div>
+        <div id="cc-terminal-log" class="term-body">
+          <div class="term-line"><span class="term-time">[00:00:01]</span> <span class="term-txt">Baza danych neuro-kapsuły: POŁĄCZONA.</span></div>
+          <div class="term-line"><span class="term-time">[00:00:02]</span> <span class="term-txt">Inicjalizacja parametrów fizjologicznych...</span></div>
+          <div class="term-line"><span class="term-time">[00:00:03]</span> <span class="term-txt">Wprowadź tożsamość, wybierz planetę i zbalansuj perki.</span></div>
+        </div>
+        <div class="term-footer">
+          <span class="term-prompt">&gt; REJESTRATOR AKTYWNY</span><span class="term-cursor">_</span>
+        </div>
+      </aside>
+    </div>
+
+    <!-- === SKRYPTY === -->
+    <script src="data/skills.js"></script>
+    <script src="data/body.js"></script>
+    <script src="data/items.js"></script>
+    <script src="data/ship.js"></script>
+    <script src="data/perks.js"></script>
+    <script src="js/grid.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/player.js"></script>
+  <script src="js/cachebtn.js"></script>
+</body>
+</html>

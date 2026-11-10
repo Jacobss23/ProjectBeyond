@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pl">
+  <!-- === SEKCJA: HEAD === -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Tarkov RPG - Project: Beyond</title>
+    <meta name="description" content="Hardcore sci-fi extraction survival RPG set in deep space orbit and planetary moons." />
+    <meta property="og:title" content="Space Tarkov RPG - Project: Beyond" />
+    <meta property="og:description" content="Hardcore sci-fi extraction survival RPG set in deep space orbit and planetary moons." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <!-- === SEKCJA: BODY === -->
+  <body>
+    <!-- === OVERLAY ANIMACJI === -->
+    <div id="transition-overlay"></div>
+
+    <!-- === KONTENER GRY === -->
+    <div id="game-container">
+      <!-- === EKRAN: MENU GŁÓWNE === -->
+      <div id="main-menu" class="screen active">
+        <div class="hud-top-telemetry">
+          <span class="term-pulse-dot"></span>
+          <span>ORBITAL SECTOR: SIGMA-9 // SURVIVAL PROTOCOL</span>
+        </div>
+        <h1 class="title">PROJECT: BEYOND</h1>
+        <div class="menu-buttons">
+          <button onclick="showScreen('saves-screen')" class="primary-btn">Graj</button>
+          <button onclick="window.location.href = 'admin.html'">Kreator gry (Admin)</button>
+          <button onclick="showScreen('settings-screen')">Ustawienia</button>
+          <button onclick="showScreen('info-screen')">Info & Dokumentacja</button>
+        </div>
+      </div>
+
+      <!-- === EKRAN: WYBÓR ZAPISU === -->
+      <div id="saves-screen" class="screen hidden">
+        <h2>Wybierz Zapis</h2>
+        <div class="save-slots" id="slots-container" style="display:flex; flex-direction:column; gap:10px; max-width:440px; margin:0 auto;">
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button onclick="loadSlot(1)" id="btn-slot-1" style="flex:1;">Slot 1 - Pusty</button>
+            <button onclick="deleteSlot(1)" id="btn-del-slot-1" class="sm" style="display:none; padding:8px 14px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#ef4444; cursor:pointer;">Usuń</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button onclick="loadSlot(2)" id="btn-slot-2" style="flex:1;">Slot 2 - Pusty</button>
+            <button onclick="deleteSlot(2)" id="btn-del-slot-2" class="sm" style="display:none; padding:8px 14px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#ef4444; cursor:pointer;">Usuń</button>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button onclick="loadSlot(3)" id="btn-slot-3" style="flex:1;">Slot 3 - Pusty</button>
+            <button onclick="deleteSlot(3)" id="btn-del-slot-3" class="sm" style="display:none; padding:8px 14px; background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#ef4444; cursor:pointer;">Usuń</button>
+          </div>
+        </div>
+        <button onclick="showScreen('main-menu')" class="back-btn" style="margin-top:14px;">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: USTAWIENIA === -->
+      <div id="settings-screen" class="screen hidden">
+        <h2>Ustawienia Terminala</h2>
+        <div class="panel" style="text-align: left; font-size: 0.9rem;">
+          <p><strong>Wyświetlanie:</strong> CRT Scanline Filter: Aktywny</p>
+          <p><strong>Dźwięki bioniczne:</strong> Audio Web Synth: Włączone</p>
+          <p><strong>Autozapis:</strong> LocalStorage (Slot 1-3)</p>
+          <p><strong>Silnik inwentarza:</strong> Bounding Grid v2.4 (Obrót R, Drag & Drop, Double-click)</p>
+        </div>
+        <button onclick="showScreen('main-menu')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: INFO === -->
+      <div id="info-screen" class="screen hidden">
+        <h2>Dokumentacja Projektu</h2>
+        <div class="panel" style="text-align: left; font-size: 0.85rem; line-height: 1.5;">
+          <p><strong>Gatunek:</strong> Hardcore Text-based Roguelike RPG w klimacie Space Tarkov & Sci-Fi Zombie.</p>
+          <p><strong>Mechaniki:</strong> Przeszukiwanie lokacji, grid-based ekwipunek, 10 umiejętności (0-15/18), 7 modułów schronu, walka turowa i automatyczna, niewidzialne statystyki (szczęście, krytyk, immunity, intuicja, stealth, scavenger, adrenalina).</p>
+          <p><strong>Sterowanie ekwipunkiem:</strong> Przeciągaj myszką, dwuklik / Shift+Klik przenosi natychmiast, klawisz R lub prawy przycisk obraca przedmiot.</p>
+        </div>
+        <button onclick="showScreen('main-menu')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === ŻYWY TERMINAL AMBIENTU W MENU === -->
+      <div class="terminal-ticker">
+        <span class="ticker-label">SYS.FEED &gt;</span>
+        <span id="menu-terminal-text" class="ticker-text">STAN SYSTEMU: PODTRZYMYWANIE ŻYCIA SPRAWNE // KANAŁ RATUNKOWY: AKTYWNY</span>
+        <span class="term-cursor">_</span>
+      </div>
+    </div>
+
+    <!-- === SKRYPTY === -->
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+      // Żywy ambient terminala w menu głównym
+      (function liveTicker() {
+        const lines = [
+          "STAN SYSTEMU: PODTRZYMYWANIE ŻYCIA SPRAWNE // KANAŁ RATUNKOWY: AKTYWNY",
+          "RADAR: WYKRYTO ODPADKI KOSMICZNE W SEKTORZE MARSA // KRYPTOGRAFIA OK",
+          "TELEMETRIA: PROMIENIOWANIE TŁA 0.04 MSV // BRAK ANOMALII GRAWITACYJNYCH",
+          "MODUŁ KOMUNIKACJI: NASŁUCH CZĘSTOTLIWOŚCI KOLONIALNEJ W TOKU...",
+          "ZAPISY LOKALNE: GOTOWE DO SYNCHRONIZACJI // STAN PAMIĘCI OPTYMALNY"
+        ];
+        let idx = 0;
+        const el = document.getElementById("menu-terminal-text");
+        if (!el) return;
+        setInterval(() => {
+          idx = (idx + 1) % lines.length;
+          el.style.opacity = 0.2;
+          setTimeout(() => {
+            el.textContent = lines[idx];
+            el.style.opacity = 1;
+          }, 300);
+        }, 5000);
+      })();
+    </script>
+  <script src="js/cachebtn.js"></script>
+</body>
+</html>

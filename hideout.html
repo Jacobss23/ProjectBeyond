@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Tarkov RPG - Schron</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div id="transition-overlay"></div>
+
+    <div id="game-container" class="wide xl">
+      <!-- === BANER WDROŻENIOWY / TUTORIAL SCHRONU === -->
+      <div id="hideout-tutorial-banner" class="hideout-tutorial-box" style="display:none;"></div>
+
+      <!-- === EKRAN: SCHRON GŁÓWNY === -->
+      <div id="hub-main" class="screen active">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="term-pulse-dot"></span>
+            <h2 id="hub-title" style="margin:0;">Schron Pokładowy</h2>
+          </div>
+          <span class="term-badge">BAZA OPERACYJNA // BEZPIECZNA</span>
+        </div>
+
+        <div class="hub-top hub-top-row">
+          <div class="art portrait">[Portret postaci]</div>
+          <div id="hub-status" class="panel"></div>
+          <div id="anatomy-panel" class="panel" style="padding:8px 10px;"></div>
+        </div>
+
+        <div class="hub-grid">
+          <button id="btn-hub-raid" onclick="goToRaidScreen()" class="primary-btn">Wyrusz na Rajd</button>
+          <button id="btn-hub-inv" onclick="goTo('hub-inv')">Ekwipunek & Magazyn</button>
+          <button id="btn-hub-trader" onclick="goTo('hub-trader')">Handlarze</button>
+          <button id="btn-hub-quests" onclick="goTo('hub-quests')">Misje Handlarzy</button>
+          <button id="btn-hub-ship" onclick="goTo('hub-ship')">Moduły Bazy</button>
+          <button id="btn-hub-skills" onclick="goTo('hub-skills')">Umiejętności</button>
+          <button id="btn-hub-rest" onclick="rest()">Odpocznij</button>
+          <button onclick="window.location.href = 'index.html'" class="back-btn" style="margin: 0">Menu Główne</button>
+        </div>
+      </div>
+
+      <!-- === EKRAN: MISJE HANDLARZY (TIER 0 / 1) === -->
+      <div id="hub-quests" class="screen hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+          <h2 style="margin:0;">Zlecenia i Misje Handlarzy</h2>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <div id="quest-tier-filter" class="btn-row" style="flex-wrap:wrap;">
+              <button id="qfilter-ready" class="sm ghost" onclick="filterQuestStatus('ready')" style="color:#4ade80;">Gotowe do oddania</button>
+              <button id="qfilter-active" class="sm" onclick="filterQuestStatus('active')">W trakcie</button>
+            </div>
+            <div id="qfilter-loc" class="gdrop"></div>
+            <span id="qchk-slot"></span>
+          </div>
+        </div>
+        <button class="sm ghost" onclick="openTraderTree('hub-quests')" style="margin-bottom:8px;">Drzewo handlarzy</button>
+        <p class="hint">Wypełniaj zlecenia dla handlarzy kolonii, aby zdobywać kredyty, rzadkie wyposażenie i cenne punkty doświadczenia.</p>
+        <div id="quests-list" style="display:flex; flex-direction:column; gap:10px; margin-top:12px;"></div>
+        <button onclick="goTo('hub-main')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: DRZEWO HANDLARZY === -->
+      <div id="hub-trader-tree" class="screen hidden">
+        <div id="trader-tree-wrap" class="rmap-view"></div>
+      </div>
+
+      <!-- === EKRAN: WYBÓR RAJDU === -->
+      <div id="hub-raid" class="screen hidden">
+        <h2>Wybierz Lokację Rajdu</h2>
+        <div id="raid-list"></div>
+        <button onclick="raidMapBack()" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: EKWIPUNEK === -->
+      <div id="hub-inv" class="screen hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2>Ekwipunek i Magazyn Schronu</h2>
+          <span style="font-size:0.8rem; color:#38bdf8;">[R: Obrót | 2xKlik: Przenieś | Prawy klik: Menu]</span>
+        </div>
+        <!-- Dedykowane Sloty Wyposażenia (Pancerz, Broń Palna 1/2, Broń Biała) -->
+        <div id="equipment-slots-panel" class="panel" style="margin-bottom:12px; text-align:left;">
+          <h3 style="margin-top:0; color:#38bdf8;">[AKTYWNE SLOTY WYPOSAŻENIA POSTACI]</h3>
+          <div id="eq-slots-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;"></div>
+        </div>
+
+        <div class="inv-layout">
+          <div class="panel scroll">
+            <div class="panel-head"><h3>Magazyn Główny <small id="stash-info"></small></h3><button class="sm" onclick="sortStash()">Sortuj</button></div>
+            <div id="stash-grid"></div>
+          </div>
+          <div class="inv-side">
+            <div class="panel">
+              <h3>Zestaw na Rajd (Plecak) <small id="load-info"></small></h3>
+              <div id="load-grid"></div>
+              <div class="btn-row" style="margin-top: 8px">
+                <button class="sm" onclick="repeatLoadout()">Powtórz ostatni</button>
+                <button class="sm ghost" onclick="clearLoadout()">Odłóż wszystko</button>
+              </div>
+            </div>
+            <div id="inv-info" class="panel item-info"></div>
+          </div>
+        </div>
+        <div id="container-panel" class="panel" style="display:none; margin-top:12px;">
+          <div class="panel-head"><h3 id="container-title"></h3><button class="sm ghost" onclick="closeContainer()">Zamknij</button></div>
+          <p id="container-accepts" style="font-size:0.8rem; color:#94a3b8; margin:4px 0 8px;"></p>
+          <div id="container-grid"></div>
+        </div>
+        <button onclick="goTo('hub-main')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: HANDLARZE (SKLEP + ZLECENIA W HANDLU) === -->
+      <div id="hub-trader" class="screen hidden">
+        <h2>Handlarze Kolonialni</h2>
+        <div id="trader-tabs" class="btn-row" style="margin-bottom:8px; flex-wrap:wrap;"></div>
+        <div id="trader-desc" class="hint" style="margin-bottom:6px;"></div>
+        <button class="sm ghost" onclick="openTraderTree('hub-trader')" style="margin-bottom:8px;">Drzewo handlarzy</button>
+        <div id="trader-credits" style="font-weight:bold; color:#38bdf8; margin-bottom:10px;"></div>
+        <div class="inv-layout">
+          <div class="panel scroll">
+            <h3>Oferta Sklepu (Kup) <small style="color:#94a3b8;">[Siatka przedmiotów]</small></h3>
+            <div id="trader-grid"></div>
+          </div>
+          <div class="panel scroll">
+            <h3>Sprzedaj (z magazynu)</h3>
+            <div id="sell-grid"></div>
+          </div>
+          <div id="sell-info" class="panel item-info"></div>
+        </div>
+
+        <!-- Zlecenia wybranego handlarza bezpośrednio w oknie handlu -->
+        <div class="panel" style="margin-top:14px; text-align:left;">
+          <h3 id="trader-quests-title" style="margin-top:0; color:#38bdf8;">[Zlecenia tego Handlarza]</h3>
+          <div id="trader-quests-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <button onclick="goTo('hub-main')" class="back-btn" style="margin-top:12px;">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: 7 MODUŁÓW SCHRONU === -->
+      <div id="hub-ship" class="screen hidden">
+        <h2>Moduły Schronu (7 Stacji Pokładowych)</h2>
+        <p class="hint">Rozwijaj stacje od poziomu 0 do 5, aby odblokować zaawansowany crafting, większy magazyn, radar i regenerację.</p>
+        <div id="ship-list" class="ship-grid-blocks"></div>
+        <button onclick="goTo('hub-main')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: UMIEJĘTNOŚCI (0-15/18) === -->
+      <div id="hub-skills" class="screen hidden">
+        <h2>Umiejętności Ocalałego (System Tarkov)</h2>
+        <p class="hint">Umiejętności rozwijają się samoczynnie podczas walki, przeszukiwania, napraw i leczenia.</p>
+        <div id="skills-list" class="hub-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+        <button onclick="goTo('hub-main')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: HYDROPONIKA (FARMA) === -->
+      <div id="hub-hydro" class="screen hidden">
+        <h2>Hydroponika Pokładowa</h2>
+        <p class="hint">Autonomiczna produkcja żywności i uzdatnianie wody pitnej zasilane rdzeniem reaktora.</p>
+        <div class="panel">
+          <div id="hydro-status" style="margin-bottom: 12px; font-size: 0.95rem;"></div>
+          <div class="btn-row">
+            <button onclick="harvestHydro()" class="primary-btn">Zbierz plony do magazynu</button>
+          </div>
+        </div>
+        <button onclick="goTo('hub-main')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === EKRAN: MODUŁ CRAFTINGU / MEDSTATION === -->
+      <div id="hub-module" class="screen hidden">
+        <h2 id="module-title">Moduł</h2>
+        <p id="module-desc"></p>
+        <div id="module-recipes" class="panel"></div>
+        <button onclick="goTo('hub-ship')" class="back-btn">Wróć</button>
+      </div>
+
+      <!-- === MODAL USUNIĘCIA PROFILU === -->
+      <div id="delete-modal" class="screen hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:9999;">
+        <div class="panel" style="max-width:440px; text-align:center; border:2px solid #ef4444; box-shadow:0 0 25px rgba(239,68,68,0.5);">
+          <h3 style="color:#ef4444; margin-top:0;">[USUNIĘCIE PROFILU POSTACI]</h3>
+          <p style="color:#cbd5e1; margin:14px 0; font-size:0.95rem; line-height:1.5;">
+            Czy na pewno chcesz usunąć profil tej postaci? Cały postęp, zdobyty poziom, wyposażenie oraz magazyn zostaną bezpowrotnie skasowane.
+          </p>
+          <div class="btn-row" style="justify-content:center; gap:12px; margin-top:16px;">
+            <button onclick="confirmDeleteCurrentProfile()" style="background:#ef4444; color:#fff; font-weight:bold; padding:8px 16px;">TAK, USUŃ PROFIL</button>
+            <button onclick="hideDeleteModal()" class="ghost" style="padding:8px 16px;">Anuluj</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === MODAL USUNIĘCIA PRZEDMIOTU Z MAGAZYNU === -->
+      <div id="item-delete-modal" class="screen hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:9999; padding:16px;">
+        <div class="panel" style="max-width:440px; width:100%; text-align:center; border:2px solid #ef4444; box-shadow:0 0 25px rgba(239,68,68,0.5);">
+          <h3 style="color:#ef4444; margin-top:0; font-family:'Orbitron', sans-serif;">[POTWIERDZENIE USUNIĘCIA]</h3>
+          <p id="item-delete-modal-text" style="color:#cbd5e1; margin:14px 0; font-size:0.95rem; line-height:1.5;">
+            Czy na pewno chcesz bezpowrotnie usunąć ten przedmiot?
+          </p>
+          <div class="btn-row" style="justify-content:center; gap:12px; margin-top:16px;">
+            <button id="btn-confirm-delete-item" style="background:#ef4444; color:#fff; font-weight:bold; padding:8px 18px; border:1px solid #f87171; cursor:pointer;">USUŃ PRZEDMIOT</button>
+            <button onclick="hideItemDeleteModal()" class="ghost" style="padding:8px 18px;">Anuluj</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === MODAL CECH I PERKÓW POSTACI === -->
+      <div id="traits-modal" class="screen hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:9999; padding:16px;">
+        <div class="panel" style="max-width:540px; width:100%; max-height:85vh; display:flex; flex-direction:column; border:2px solid #38bdf8; box-shadow:0 0 25px rgba(56,189,248,0.35); text-align:left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(56,189,248,0.3); padding-bottom:8px; margin-bottom:12px;">
+            <h3 style="color:#38bdf8; margin:0; font-family:'Orbitron', sans-serif;">[CECHY I MODYFIKATORY GENOMU]</h3>
+            <button onclick="hideTraitsModal()" class="sm ghost" style="padding:2px 8px; font-weight:bold; color:#cbd5e1;">✕</button>
+          </div>
+          <div id="traits-modal-list" style="overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px; padding-right:4px;">
+            <!-- Lista cech generowana w JS -->
+          </div>
+          <div style="margin-top:14px; text-align:right; border-top:1px solid rgba(56,189,248,0.2); padding-top:10px;">
+            <button onclick="hideTraitsModal()" class="primary-btn" style="min-width:100px;">Zamknij</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- === ŻYWY TERMINAL SCHRONU (Zawsze widoczny na dole) === -->
+      <div class="term-status-header" style="margin-top: 14px;">
+        <span class="term-badge">TERMINAL POKŁADOWY // TELEMETRIA</span>
+        <span class="term-prompt">&gt; NASŁUCH AKTYWNY</span><span class="term-cursor">_</span>
+      </div>
+      <div id="log" class="log small"></div>
+    </div>
+
+    <!-- Skrypty bazy i silnika -->
+    <script src="data/lore.js"></script>
+    <script src="data/skills.js"></script>
+    <script src="data/body.js"></script>
+    <script src="data/items.js"></script>
+    <script src="data/ship.js"></script>
+    <script src="data/traders.js"></script>
+    <script src="data/enemies.js"></script>
+    <script src="data/maps.js"></script>
+    <script src="data/perks.js"></script>
+    <script src="js/wiki.js"></script>
+    <script src="js/icons.js"></script>
+    <script src="js/grid.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/dialogue.js"></script>
+    <script src="data/dialogues_main.js"></script>
+    <script src="js/daynight.js"></script>
+    <script src="js/hideout.js"></script>
+  <script src="js/cachebtn.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "project": "Space Tarkov RPG",
+  "version": "4.0.0",
+  "author": "jac0bs",
+  "engine": "HTML / CSS / JS & React Modular Roguelike",
+  "stations": [
+    "Crafting (lvl 0-3)",
+    "Medstation (lvl 0-2)",
+    "Stash (lvl 1-5)",
+    "Silniki (lvl 0-2)",
+    "Komunikacja (lvl 0-3)",
+    "Hydroponika (lvl 0-5)",
+    "Safe system (lvl 0-2)"
+  ],
+  "skills": [
+    "Siła (0-15)",
+    "Wytrzymałość (0-15)",
+    "Witalność (0-15)",
+    "Przeszukiwanie (0-15)",
+    "Percepcja (0-15)",
+    "Broń Palna (0-15)",
+    "Medycyna (0-15)",
+    "Inżynieria (0-15)",
+    "Metabolizm (0-15)",
+    "Przetrwanie (0-15)"
+  ],
+  "features": [
+    "Auto-walka z automatycznym leczeniem i karą -5% XP",
+    "Pełny panel konfiguracji i kreator gry z uploadem grafik",
+    "Siatka ekwipunku Tarkov z rotacją (R) i szybkim transferem",
+    "Radar rozpoznania Safe System z podglądem zagrożeń i celów questów",
+    "Farma żywności i wody w Hydroponice",
+    "Terminal CRT z liniami skanowania i syntezą retro audio"
+  ]
+}

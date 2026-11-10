@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Tarkov RPG - Rajd</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div id="transition-overlay"></div>
+
+    <div id="game-container" class="wide xl raid-wide">
+      <div id="raid-screen" class="screen active">
+        <!-- Pasek telemetryczny rajdu -->
+        <div class="raid-head">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="term-pulse-dot"></span>
+            <h2 id="loc-name" style="margin:0;"></h2>
+          </div>
+          <div class="raid-stats">
+            <div class="bar"><span id="hp-bar"></span><em id="hp-text"></em></div>
+            <div class="bar cond-bar"><span id="food-bar"></span><em id="food-text"></em></div>
+            <div class="bar cond-bar"><span id="water-bar"></span><em id="water-text"></em></div>
+            <div id="storm-text"></div>
+          </div>
+        </div>
+
+        <div class="raid-layout">
+          <div class="raid-left">
+            <div id="art" class="art"></div>
+            <div id="objectives" class="objectives" style="display: none"></div>
+            <div id="log" class="log"></div>
+            <div id="actions" class="actions"></div>
+          </div>
+
+          <div class="raid-right">
+            <!-- GÓRNY RZĄD: Stan anatomii postaci & Aktywne sloty wyposażenia -->
+            <div class="raid-top-row" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div class="panel" style="padding:8px;">
+                <h3 style="margin:0 0 6px 0;">Mapa</h3>
+                <div id="minimap"></div>
+              </div>
+
+              <div id="anatomy-panel" class="panel" style="padding:6px 10px;"></div>
+              <div id="equipment-slots-panel" class="panel" style="padding:6px 10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <h3 style="margin:0; font-size:0.85rem;">Wyposażenie</h3>
+                </div>
+                <div id="eq-slots-container" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:4px;"></div>
+              </div>
+            </div>
+
+            <!-- GŁÓWNY RZĄD: ZIEMIA PO LEWEJ, PLECAK PO PRAWEJ -->
+            <!-- Widok normalny: ziemia + plecak (podczas walki zastępowany przez UI walki) -->
+            <div id="inv-wrap">
+            <button id="bag-back-btn" class="sm primary-btn bag-back" style="display:none;">⚔ Wróć do walki</button>
+            <div class="raid-inv-row">
+              <!-- Ziemia (po lewej od ekwipunku) -->
+              <div id="ground-panel" class="panel" style="padding:8px 10px; display:flex; flex-direction:column; align-items:center; overflow:hidden; position:relative;">
+                <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <h3 style="margin:0; font-size:0.95rem;">Ziemia</h3>
+                  <button id="take-all" class="sm" style="margin:0; width:auto; padding:2px 6px; font-size:0.72rem;">Zabierz wszystko</button>
+                </div>
+                <div id="ground-grid" style="display:flex; justify-content:center; width:100%;"></div>
+              </div>
+
+              <!-- Plecak (po prawej) -->
+              <div class="panel" style="padding:8px 10px; display:flex; flex-direction:column; align-items:center; overflow:hidden;">
+                <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                  <h3 style="margin:0; font-size:0.95rem;">Plecak <small id="bag-info"></small></h3>
+                  <span class="hint">R: obróć</span>
+                </div>
+                <div id="bag-grid" style="display:flex; justify-content:center; width:100%;"></div>
+              </div>
+            </div>
+            </div>
+
+            <!-- UI WALKI: zastępuje plecak i ziemię podczas walki -->
+            <div id="combat-ui" class="combat-ui" style="display:none;">
+              <div class="combat-head">
+                <h3>Walka</h3>
+                <button id="combat-bag-btn" class="bag-icon" title="Otwórz plecak">🎒 Plecak</button>
+              </div>
+              <div id="combat-body"></div>
+            </div>
+
+            <!-- Informacja o przedmiocie na dole -->
+            <div id="item-info" class="panel item-info" style="padding:6px 10px; min-height:48px;"></div>
+          </div>
+        </div>
+      </div>
+      <div id="win-flash" class="win-flash" aria-hidden="true"><span class="slash"></span><span class="slash s2"></span></div>
+    </div>
+
+    <!-- Skrypty bazy danych i silnika -->
+    <script src="data/lore.js"></script>
+    <script src="data/skills.js"></script>
+    <script src="data/body.js"></script>
+    <script src="data/items.js"></script>
+    <script src="data/ship.js"></script>
+    <script src="data/enemies.js"></script>
+    <script src="data/maps.js"></script>
+    <script src="data/traders.js"></script>
+    <script src="data/perks.js"></script>
+    <script src="js/wiki.js"></script>
+    <script src="js/icons.js"></script>
+    <script src="js/grid.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/dialogue.js"></script>
+    <script src="js/daynight.js"></script>
+    <script src="js/raid.js"></script>
+  <script src="js/cachebtn.js"></script>
+</body>
+</html>

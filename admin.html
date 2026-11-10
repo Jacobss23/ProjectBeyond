@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Tarkov RPG - Kreator Gry & Panel Administratora</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,400&family=Karla:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+  </head>
+
+  <body>
+    <div id="transition-overlay"></div>
+
+    <div id="admin-container">
+      <!-- === NAGŁÓWEK ADMINA === -->
+      <header class="admin-header">
+        <div class="admin-title-area">
+          <h1 class="admin-title">KREATOR GRY & ADMIN</h1>
+          <span class="admin-badge">EDYCJA BAZY DANYCH • NIEWIDZIALNE STATYSTYKI • LOCALSTORAGE</span>
+        </div>
+        <div class="admin-nav-actions">
+          <button onclick="saveAllChanges()" class="primary-btn">[ZAPISZ ZMIANY]</button>
+          <button onclick="exportJson()" class="accent-btn">[POBIERZ JSON]</button>
+          <label class="file-btn">
+            [WCZYTAJ JSON]
+            <input type="file" id="import-json-file" accept=".json" onchange="importJson(event)" style="display: none" />
+          </label>
+          <button onclick="resetDefaults()" class="danger-btn">[PRZYWRÓĆ DOMYŚLNE]</button>
+          <button onclick="window.location.href = 'index.html'" class="ghost-btn">[MENU GŁÓWNE]</button>
+        </div>
+      </header>
+
+      <!-- === STATUS POWIADOMIENIA === -->
+      <div id="admin-toast" class="admin-toast hidden"></div>
+
+      <!-- === ZAKŁADKI GŁÓWNE === -->
+      <nav class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('items')">[PRZEDMIOTY]</button>
+        <button class="admin-tab" onclick="switchTab('perks')">[CECHY & PERKI]</button>
+        <button class="admin-tab" onclick="switchTab('enemies')">[WROGOWIE]</button>
+        <button class="admin-tab" onclick="switchTab('traders')">[HANDLARZE]</button>
+        <button class="admin-tab" onclick="switchTab('quests')">[ZLECENIA]</button>
+        <button class="admin-tab" onclick="switchTab('loot')">[ŁUP]</button>
+        <button class="admin-tab" onclick="switchTab('maps')">[MAPY & LOKACJE]</button>
+        <button class="admin-tab" onclick="switchTab('skills')">[UMIEJĘTNOŚCI]</button>
+        <button class="admin-tab" onclick="switchTab('raw')">[RAW JSON]</button>
+      </nav>
+
+      <!-- === ZAWARTOŚĆ ZAKŁADEK === -->
+      <main class="admin-main">
+        <!-- ZAKŁADKA: PRZEDMIOTY -->
+        <section id="tab-items" class="tab-pane active">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header">
+                <h3>Lista Przedmiotów</h3>
+                <button onclick="addNewItem()" class="sm-btn">+ Nowy</button>
+              </div>
+              <input type="text" id="items-search" placeholder="Szukaj przedmiotu..." oninput="filterItemsList()" class="search-input" />
+              <div id="items-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane">
+              <div id="item-editor-content">
+                <p class="empty-hint">Wybierz przedmiot z listy lub stwórz nowy.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ZAKŁADKA: CECHY & PERKI (Z NIEWIDZIALNYMI STATYSTYKAMI) -->
+        <section id="tab-perks" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header">
+                <h3>Lista Cech & Perków</h3>
+                <button onclick="addNewPerk()" class="sm-btn">+ Nowy Perk</button>
+              </div>
+              <input type="text" id="perks-search" placeholder="Szukaj perka..." oninput="filterPerksList()" class="search-input" />
+              <div id="perks-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane">
+              <div id="perk-editor-content">
+                <p class="empty-hint">Wybierz cechę z listy lub dodaj nową.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ZAKŁADKA: WROGOWIE -->
+        <section id="tab-enemies" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header">
+                <h3>Lista Wrogów</h3>
+                <button onclick="addNewEnemy()" class="sm-btn">+ Nowy</button>
+              </div>
+              <div id="enemies-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane">
+              <div id="enemy-editor-content">
+                <p class="empty-hint">Wybierz wroga z listy lub stwórz nowego.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ZAKŁADKA: HANDLARZE -->
+        <section id="tab-traders" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header">
+                <h3>Lista Handlarzy</h3>
+                <button onclick="addNewTrader()" class="sm-btn">+ Nowy</button>
+              </div>
+              <div id="traders-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane">
+              <div id="trader-editor-content">
+                <p class="empty-hint">Wybierz handlarza z listy lub stwórz nowego.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ZAKŁADKA: MAPY -->
+        <section id="tab-maps" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header">
+                <h3>Lista Map</h3>
+                <button onclick="addNewMap()" class="sm-btn">+ Nowa</button>
+              </div>
+              <div id="maps-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane">
+              <div id="map-editor-content">
+                <p class="empty-hint">Wybierz mapę z listy lub stwórz nową.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ZAKŁADKA: UMIEJĘTNOŚCI -->
+        <section id="tab-skills" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header">
+                <h3>Umiejętności (0-15/18)</h3>
+              </div>
+              <div id="skills-list-admin" class="list-container"></div>
+            </aside>
+            <section class="editor-pane">
+              <div id="skill-editor-content">
+                <p class="empty-hint">Wybierz umiejętność z listy.</p>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ZAKŁADKA: RAW JSON -->
+        <section id="tab-quests" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header"><h3>Lista Zleceń</h3><button onclick="addNewQuest()" class="sm-btn">+ Nowe</button></div>
+              <div id="quests-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane"><div id="quest-editor-content"><p class="empty-hint">Wybierz zlecenie z listy.</p></div></section>
+          </div>
+        </section>
+
+        <section id="tab-loot" class="tab-pane">
+          <div class="split-view">
+            <aside class="sidebar-list">
+              <div class="sidebar-header"><h3>Tabele Łupu</h3><button onclick="addNewLootTable()" class="sm-btn">+ Nowa</button></div>
+              <div id="loot-list" class="list-container"></div>
+            </aside>
+            <section class="editor-pane"><div id="loot-editor-content"><p class="empty-hint">Wybierz tabelę z listy.</p></div></section>
+          </div>
+        </section>
+
+        <section id="tab-raw" class="tab-pane">
+          <div class="raw-json-container">
+            <p class="hint">Możesz bezpośrednio edytować cały obiekt bazy danych w formacie JSON i zastosować go w grze.</p>
+            <textarea id="raw-json-textarea" spellcheck="false"></textarea>
+            <div class="btn-row" style="margin-top: 10px;">
+              <button onclick="applyRawJson()" class="primary-btn">Zastosuj edycję JSON</button>
+              <button onclick="formatRawJson()" class="sm-btn">Formatuj kod</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Dane bazy -->
+    <script src="data/skills.js"></script>
+    <script src="data/items.js"></script>
+    <script src="data/enemies.js"></script>
+    <script src="data/traders.js"></script>
+    <script src="data/maps.js"></script>
+    <script src="data/ship.js"></script>
+    <script src="data/perks.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/admin.js"></script>
+  </body>
+</html>

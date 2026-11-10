@@ -1,0 +1,20 @@
+// === SEKCJA: IKONY PRZEDMIOTÓW (SVG, prosta interpretacja) ===
+// Klucz = id przedmiotu z data/items.js. Rysowane kolorem tekstu (currentColor), więc pasują do tonu kafelka.
+// Brak wpisu = kafelek pokazuje skrót nazwy jak dotąd.
+const ITEM_ICONS = {
+  bandage: `<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="8" ry="5" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="3.5" ry="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4 12h-2M20 12h2" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  tourniquet: `<svg viewBox="0 0 24 24"><path d="M3 9h18v6H3z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 9v6M14 9v6" stroke="currentColor" stroke-width="1.4"/><circle cx="18" cy="12" r="2.4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>`,
+  medkit: `<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 6V4.5h6V6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 9.5v6M9 12.5h6" stroke="currentColor" stroke-width="2"/></svg>`,
+  hemostatic: `<svg viewBox="0 0 24 24"><path d="M12 3c3.5 4.5 5.5 7.2 5.5 10a5.5 5.5 0 0 1-11 0C6.5 10.2 8.5 7.5 12 3z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 10.5v5M9.5 13h5" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  ration: `<svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 8h12" stroke="currentColor" stroke-width="1.4"/><path d="M9 12h6M9 15h4" stroke="currentColor" stroke-width="1.2"/></svg>`,
+  splint: `<svg viewBox="0 0 24 24"><rect x="2.5" y="10" width="19" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 7v10M17 7v10" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  ammo9: `<svg viewBox="0 0 24 24"><rect x="9" y="8" width="6" height="11" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 8c0-3 6-3 6 0" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  ammo12: `<svg viewBox="0 0 24 24"><rect x="7.5" y="5" width="9" height="15" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.5 9h9M7.5 13h9" stroke="currentColor" stroke-width="1.3"/></svg>`,
+  ammo556: `<svg viewBox="0 0 24 24"><path d="M10 9h4v10h-4z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9c0-4 4-4 4 0" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  scrap: `<svg viewBox="0 0 24 24"><path d="M5 17l3-7 4 2 3-5 4 3-2 9H5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+  wires: `<svg viewBox="0 0 24 24"><path d="M3 7c3 0 3 4 6 4s3-4 6-4 3 4 6 4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 15c3 0 3 4 6 4s3-4 6-4 3 4 6 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  cloth: `<svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 10c3 1 5-1 7 0s4 1 7 0M5 15c3 1 5-1 7 0s4 1 7 0" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>`,
+  pistol: `<svg viewBox="0 0 24 24"><path d="M3 8h13v3h3v3h-3v2H9v-2H6v-3H3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M11 14v4h2v-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`,
+  combat_knife: `<svg viewBox="0 0 24 24"><path d="M4 20l9-10 3 2-9 10z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 9l4-5" stroke="currentColor" stroke-width="1.8"/></svg>`,
+  crowbar: `<svg viewBox="0 0 24 24"><path d="M6 3h4v15a3 3 0 0 0 3 3h5v-4h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
+};
