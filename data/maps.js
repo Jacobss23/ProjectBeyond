@@ -7,6 +7,7 @@ const LOOT = {
     { id: "cloth", w: 15, min: 1, max: 3 },
     { id: "bandage", w: 10, min: 1, max: 1 },
     { id: "circuit", w: 8, min: 1, max: 1 },
+    { id: "ancient_coin", w: 6, min: 1, max: 1 },
   ],
   junk: [
     { id: "scrap", w: 35, min: 1, max: 2 },
@@ -14,6 +15,8 @@ const LOOT = {
     { id: "wires", w: 20, min: 1, max: 2 },
     { id: "crowbar", w: 6, min: 1, max: 1 },
     { id: "combat_knife", w: 4, min: 1, max: 1 },
+    { id: "sledge_heavy", w: 4, min: 1, max: 1 },
+    { id: "ancient_coin", w: 5, min: 1, max: 1 },
   ],
   supply: [
     { id: "titan_ration", w: 15, min: 1, max: 2 },
@@ -35,6 +38,7 @@ const LOOT = {
     { id: "morphine", w: 15, min: 1, max: 1 },
     { id: "decontam_kit", w: 10, min: 1, max: 1 },
     { id: "stim_adrenal", w: 6, min: 1, max: 1 },
+    { id: "diagnostic_scanner", w: 4, min: 1, max: 1 },
   ],
   tech: [
     { id: "neural_chip", w: 6, min: 1, max: 1 },
@@ -52,6 +56,9 @@ const LOOT = {
     { id: "artifact_orb", w: 2, min: 1, max: 1 },
     { id: "emerald_xenon", w: 3, min: 1, max: 1 },
     { id: "meteor_iron", w: 3, min: 1, max: 1 },
+    { id: "multitool", w: 5, min: 1, max: 1 },
+    { id: "mining_drill", w: 3, min: 1, max: 1 },
+    { id: "hack_deck", w: 1, min: 1, max: 1 },
   ],
   military: [
     { id: "ammo9", w: 22, min: 8, max: 18 },
@@ -70,6 +77,10 @@ const LOOT = {
     { id: "pocket_watch", w: 3, min: 1, max: 1 },
     { id: "relic_old_earth", w: 1, min: 1, max: 1 },
     { id: "gold_ingot", w: 2, min: 1, max: 1 },
+    { id: "rifle_orbit", w: 3, min: 1, max: 1 },
+    { id: "plate_heavy", w: 1, min: 1, max: 1 },
+    { id: "ruby_shard", w: 3, min: 1, max: 1 },
+    { id: "diamond_ring", w: 1, min: 1, max: 1 },
   ],
   boss_archive: [
     { id: "quantum_core", w: 6, min: 1, max: 1 },
@@ -78,6 +89,8 @@ const LOOT = {
     { id: "artifact_orb", w: 5, min: 1, max: 1 },
     { id: "relic_old_earth", w: 3, min: 1, max: 1 },
     { id: "titan_fusion_core", w: 6, min: 1, max: 1 },
+    { id: "ruby_shard", w: 4, min: 1, max: 1 },
+    { id: "diamond_ring", w: 2, min: 1, max: 1 },
   ],
   zombie: [
     { id: "cloth", w: 40, min: 1, max: 2 },
@@ -111,6 +124,7 @@ const LOOT = {
     { id: "pathogen_clot", w: 20, min: 1, max: 2 },
     { id: "axe_fire", w: 15, min: 1, max: 1 },
     { id: "vest_kevlar", w: 10, min: 1, max: 1 },
+    { id: "plate_heavy", w: 6, min: 1, max: 1 },
   ],
   titan_military: [
     { id: "ammo556", w: 25, min: 10, max: 20 },
@@ -119,6 +133,7 @@ const LOOT = {
     { id: "rifle_assault", w: 10, min: 1, max: 1 },
     { id: "stim_adrenal", w: 15, min: 1, max: 1 },
     { id: "vest_kevlar", w: 10, min: 1, max: 1 },
+    { id: "rifle_orbit", w: 4, min: 1, max: 1 },
   ],
 };
 
@@ -203,7 +218,7 @@ const MAPS = {
     start: "airlock_a",
     storm: 24,
     stormDmg: 5,
-    intro: "[KOPUŁA TYTAN] Księżyc Saturna - Biosfera Nowy Ereb. Miasto pod ciśnieniową kopułą padło ofiarą Szeptu, wirusa, który przeskoczył między układami. Wściekli zarażeni z Szeptu-Furii patrolują korytarze, a dalej błąkają się puści z Szeptu-Pustki. Za 24 tury burza metanowa uszkodzi filtry śluzy.",
+    intro: "[KOPUŁA TYTAN] Księżyc Saturna - Biosfera Nowy Ereb. Miasto pod ciśnieniową kopułą padło ofiarą Szeptu, wirusa, który od sześćdziesięciu lat przeskakuje między układami. Wściekli zarażeni z Szeptu-Furii patrolują korytarze, a dalej błąkają się puści z Szeptu-Pustki. Za 24 tury burza metanowa uszkodzi filtry śluzy.",
     nodes: {
       airlock_a: {
         name: "Śluza Sektora A",
@@ -378,6 +393,7 @@ const MAPS = {
         desc: "Kartoteki rozsypane po podłodze. Pod sufitem miga awaryjne światło.",
         exits: ["arch_entry", "stacks", "gas_corr"],
         loot: { table: "tech", rolls: 1 },
+        guaranteed: [["manual", 1]],
       },
       gas_corr: {
         name: "Korytarz Mgieł",

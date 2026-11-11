@@ -2353,14 +2353,16 @@ function turnInQuest(questId) {
     }
   }
 
-  const canTurnIn = q.req.every((r) => {
-    const total = countItem(save.stash, r.id) + countItem(save.loadout, r.id);
-    return total >= r.qty;
-  });
+  const canTurnIn = q.req.every((r) => questItemHeld(q, r) >= r.qty);
 
   if (!canTurnIn) return say("Nie posiadasz wszystkich wymaganych przedmiotów.", "warn");
 
   q.req.forEach((r) => {
+    if (ITEMS[r.id]?.quest) {
+      // zużycie z wyniesionych przedmiotów fabularnych (nie z magazynu)
+      save.questCarry[q.id][r.id] = (save.questCarry[q.id][r.id] || 0) - r.qty;
+      return;
+    }
     let needed = r.qty;
     const inLoad = countItem(save.loadout, r.id);
     if (inLoad > 0) {
@@ -2564,14 +2566,34 @@ function mainDialogLines(q, part) {
       ? [{ speaker: q.traderId, text: q.desc }]
       : [{ speaker: q.traderId, text: "Dobra robota. Oto twoja nagroda." }];
   }
-  return d[part].map((l) => {
-    if (l.choice) return { choice: l.choice };
+  const mapLine = (l) => {
     const speaker = l.k === "t" ? q.traderId : l.k === "n" ? "narrator" : "player";
     return { speaker, text: l.text };
-  });
+  };
+  // Trader przedstawia się tylko przy pierwszej rozmowie
+  const met = !!(save.metTraders && save.metTraders[q.traderId]);
+  save.metTraders = save.metTraders || {};
+  save.metTraders[q.traderId] = true;
+  const dropIntro = (text) => (met ? (text || "").replace(/\s*Jestem [^.]*\.\s*/, " ").trim() : text);
+  const connect = [{ speaker: "narrator", text: "Połączenie wideo nawiązane." }];
+  return connect.concat(d[part].map((l) => {
+    if (l.choice) {
+      // Każda opcja ma własne odpowiedzi (lines), odtwarzane tylko po jej wybraniu
+      return { choice: l.choice.map((o) => ({ label: o.label, text: o.text, lines: (o.lines || []).map(mapLine) })) };
+    }
+    const out = mapLine(l);
+    if (out.speaker === q.traderId) out.text = dropIntro(out.text);
+    return out;
+  }));
 }
 
 // Co jeszcze blokuje oddanie głównej misji (null = gotowa do oddania)
+// Przedmioty fabularne nie wracają do magazynu po rajdzie, więc liczy się to, co wyniesiono (questCarry).
+function questItemHeld(q, r) {
+  if (ITEMS[r.id]?.quest) return ((save.questCarry || {})[q.id] || {})[r.id] || 0;
+  return countItem(save.stash, r.id) + countItem(save.loadout, r.id);
+}
+
 function mainBlocker(q) {
   if (q.kill && !(save.kills || {})[q.kill]) return "Pokonaj cel zlecenia.";
   if (q.needModule && moduleLevel(save, q.needModule.id) < q.needModule.level) return "Ulepsz wymagany moduł bazy.";
@@ -2581,7 +2603,7 @@ function mainBlocker(q) {
     const carried = (save.questCarry || {})[q.id] || {};
     if (!q.req.every((r) => (carried[r.id] || 0) >= r.qty)) return "Ewakuuj się z wymaganymi przedmiotami.";
   }
-  if (!q.req.every((r) => countItem(save.stash, r.id) + countItem(save.loadout, r.id) >= r.qty)) return "Zbierz wymagane przedmioty.";
+  if (!q.req.every((r) => questItemHeld(q, r) >= r.qty)) return "Zbierz wymagane przedmioty.";
   return null;
 }
 

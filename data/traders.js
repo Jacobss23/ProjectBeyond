@@ -2,16 +2,16 @@
 const TRADERS = [
   {
     id: "trader1",
-    name: "Dr Jan Vane - Sanitariusz Polowy",
+    name: "Dr Jana Vane - Sanitariuszka Polowa",
     desc: "Specjalista medycyny ratunkowej i epidemiolog. Skupuje próbki biologiczne i zaopatruje w leki.",
     buyMult: 1.4,
     sellMult: 1.0,
     fixedPrices: { ration: 400, water: 300 },
     color: "#10b981", // Emerald
-    stock: {
+        stock: {
       0: ["ration", "water", "bandage", "hemostatic"],
-      1: ["ointment", "splint", "saturn_cola", "medicine_case"],
-      2: ["medkit", "morphine", "decontam_kit", "stim_bleedstop"],
+      1: ["ointment", "splint", "medicine_case", "shield_gel"],
+      2: ["medkit", "morphine", "decontam_kit", "antitoksyna"],
     },
   },
   {
@@ -21,9 +21,9 @@ const TRADERS = [
     buyMult: 1.35,
     sellMult: 0.9,
     color: "#f59e0b", // Amber
-    stock: {
-      0: ["ammo9", "ammo12", "pistol", "shotgun", "combat_knife", "crowbar"],
-      1: ["ammo556", "revolver_magnum", "smg", "rifle_assault", "weapon_case"],
+        stock: {
+      0: ["ammo9", "ammo12", "pistol", "shotgun"],
+      1: ["ammo556", "revolver_magnum", "smg", "weapon_case"],
       2: ["ammo762", "ammo_magnum", "sniper_dragoon", "plasma_carbine"],
     },
   },
@@ -34,10 +34,10 @@ const TRADERS = [
     buyMult: 1.5,
     sellMult: 1.15,
     color: "#06b6d4", // Cyan
-    stock: {
-      0: ["scrap", "wires", "wrench"],
-      1: ["circuit", "fuel_cell"],
-      2: ["titan_filter", "quantum_core"],
+        stock: {
+      0: ["scrap", "wrench", "broken_drone"],
+      1: ["fuel_cell", "platinum_wire", "geiger"],
+      2: ["titan_filter", "titan_fusion_core"],
     },
   },
   {
@@ -47,9 +47,9 @@ const TRADERS = [
     buyMult: 1.45,
     sellMult: 1.0,
     color: "#6366f1", // Indigo
-    stock: {
-      0: ["armor_damaged", "helmet_tactical"],
-      1: ["armor_scout", "vest_kevlar"],
+        stock: {
+      0: ["armor_damaged", "helmet_tactical", "kompres_chlodzacy", "armor_light_mesh"],
+      1: ["armor_scout", "gas_mask", "racja_wojskowa", "helmet_night"],
       2: ["armor_vest", "armor_exo"],
     },
   },
@@ -60,10 +60,10 @@ const TRADERS = [
     buyMult: 1.6,
     sellMult: 1.2,
     color: "#8b5cf6", // Violet
-    stock: {
-      0: ["data_chip"],
-      1: ["circuit", "stim_adrenal"],
-      2: ["fuel_cell", "quantum_core"],
+        stock: {
+      0: ["data_chip", "wires", "old_phone"],
+      1: ["circuit", "neural_chip", "stim_adrenal", "lockpick_set"],
+      2: ["quantum_core", "nanite_serum"],
     },
   },
   {
@@ -73,10 +73,10 @@ const TRADERS = [
     buyMult: 1.4,
     sellMult: 1.0,
     color: "#ef4444", // Crimson
-    stock: {
-      0: ["ammo9", "combat_knife"],
-      1: ["ammo12", "vest_kevlar", "stim_bleedstop"],
-      2: ["ammo556", "axe_fire", "rifle_assault"],
+        stock: {
+      0: ["combat_knife", "stun_baton", "crowbar", "knife_throw"],
+      1: ["vest_kevlar", "tourniquet", "stim_bleedstop"],
+      2: ["axe_fire", "machete", "bandaz_zbiorczy"],
     },
   },
   {
@@ -86,10 +86,10 @@ const TRADERS = [
     buyMult: 1.3,
     sellMult: 1.1,
     color: "#eab308", // Gold
-    stock: {
-      0: ["mining_glove"],
-      1: ["ore_titanium", "helium3", "xenonite_crystal"],
-      2: ["fuel_cell"],
+        stock: {
+      0: ["mining_glove", "flashlight_uv"],
+      1: ["ore_titanium", "meteor_iron", "xenonite_crystal"],
+      2: ["helium3"],
     },
   },
   {
@@ -99,10 +99,10 @@ const TRADERS = [
     buyMult: 1.7,
     sellMult: 1.3,
     color: "#ec4899", // Magenta
-    stock: {
-      0: ["data_chip", "crowbar"],
-      1: ["quantum_core", "relic_old_earth"],
-      2: ["gold_ingot", "titan_diamond", "armor_exo", "sniper_dragoon"],
+        stock: {
+      0: ["pocket_watch", "holo_portrait"],
+      1: ["relic_old_earth", "lunar_pearl"],
+      2: ["gold_ingot", "titan_diamond", "sapphire_tesla", "golden_chalice"],
     },
   },
 ];
@@ -206,7 +206,7 @@ const MAIN_QUESTS = [
       { id: "helium3", qty: 1 },
     ],
     task: { type: "hack", label: "Włamanie do zamka", map: "titan_mines", node: "mine_entry", intel: "Żyła rudy: sonda potwierdza złoże." },
-    reward: { credits: 1100, xp: 220, item: "xenonite_crystal", itemQty: 1, rep: 40 },
+    reward: { credits: 1100, xp: 220, item: "diamond_ring", itemQty: 1, rep: 40 },
   },
   {
     id: "q1_jax_relic",
@@ -321,7 +321,7 @@ const MAIN_QUESTS = [
       traderId: "trader1",
       isMain: true,
       title: "Lekarstwo na Szept",
-      desc: "Dr Vane prowadził w Nowym Ereb klinikę, zanim pierwsza fala Szeptu zamknęła szpital za grodziami. Wierzy, że w laboratoriach izolacji zostały próbki, które mogą zatrzymać zarażenie, zanim rozprzestrzeni się dalej. Bez nich każda kolejna apteczka to tylko opóźnienie. Dostarcz 6x Apteczka, 4x Morfina i 2x Szmata. Zdobądź dane z terminala w laboratorium na Tau Ceti - Fabryka Helix.",
+      desc: "Dr Vane prowadziła w Nowym Ereb klinikę, zanim Szept, który trwa od sześćdziesięciu lat, zamknął szpital za grodziami. Wierzy, że w laboratoriach izolacji zostały próbki, które mogą zatrzymać zarażenie, zanim rozprzestrzeni się dalej. Bez nich każda kolejna apteczka to tylko opóźnienie. Dostarcz 6x Apteczka, 4x Morfina i 2x Szmata. Zdobądź dane z terminala w laboratorium na Tau Ceti - Fabryka Helix.",
       req: [
           {
               id: "medkit",

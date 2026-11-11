@@ -6,7 +6,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Klinika w kopule. Vane pochyla się nad stołem zawalonym probówkami i przeciera oczy. Gdy wchodzisz, unosi wzrok z wyraźnym zmęczeniem."
+    "text": "Klinika w kopule. Vane pochyla się nad stołem zawalonym probówkami i przeciera oczy. Gdy się łączysz, unosi wzrok z wyraźnym zmęczeniem."
    },
    {
     "k": "t",
@@ -22,7 +22,7 @@ const MAIN_DIALOGS = {
    },
    {
     "k": "p",
-    "text": "Widziałem ludzi, którzy zmienili się w jedną noc."
+    "text": "Widziałam ludzi, którzy zmienili się w jedną noc."
    },
    {
     "k": "t",
@@ -200,7 +200,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Vane siedzi przy biurku w półmroku, z zapiętym fartuchem. Nie wstaje, gdy wchodzisz. Na ekranie widać schemat, który bardziej przypomina mapę miasta niż chemiczny diagram."
+    "text": "Vane siedzi przy biurku w półmroku, z zapiętym fartuchem. Nie wstaje, gdy się łączysz. Na ekranie widać schemat, który bardziej przypomina mapę miasta niż chemiczny diagram."
    },
    {
     "k": "t",
@@ -254,7 +254,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Posterunek na Tytanie. Stos skrzyń z ręcznie wypisanymi numerami. Karras stoi przy mapie, ramiona założone, i nie odwraca się, gdy wchodzisz."
+    "text": "Posterunek na Tytanie. Stos skrzyń z ręcznie wypisanymi numerami. Karras stoi przy mapie, ramiona założone, i nie odwraca się, gdy się łączysz."
    },
    {
     "k": "t",
@@ -1774,11 +1774,11 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Klinika w kopule Nowego Ereb. Na ścianie wisi zdjęcie szpitala sprzed pierwszej fali. Vane, w zakrwawionym fartuchu, klnie cicho nad jakimś pudełkiem bez wieka."
+    "text": "Połączenie wideo z kliniką w kopule Nowego Ereb. Na ścianie wisi zdjęcie szpitala sprzed czasów Szeptu. Vane, w zakrwawionym fartuchu, klnie cicho nad jakimś pudełkiem bez wieka."
    },
    {
     "k": "t",
-    "text": "Cholera, znowu ten zamek... Jestem doktor Jan Vane. Prowadziłem tu szpital, zanim się wszystko posypało."
+    "text": "Cholera, znowu ten zamek... Jestem doktor Jana Vane. Prowadziłam tu szpital, zanim się wszystko posypało."
    },
    {
     "k": "p",
@@ -1804,17 +1804,19 @@ const MAIN_DIALOGS = {
     "choice": [
      {
       "label": "Zajmę się tym, doktorze.",
-      "text": "Zajmę się tym, doktorze."
+      "text": "Zajmę się tym, doktorze.",
+      "lines": [
+       { "k": "t", "text": "Dobrze. Wracaj, jak będziesz miał." }
+      ]
      },
      {
       "label": "Czy to naprawdę jest pilne?",
-      "text": "Czy to naprawdę jest pilne?"
+      "text": "Czy to naprawdę jest pilne?",
+      "lines": [
+       { "k": "t", "text": "Pilne? Wszystko jest pilne... ale zacznij od tego, co dziś zrobisz. Wracaj, jak będziesz miał." }
+      ]
      }
     ]
-   },
-   {
-    "k": "t",
-    "text": "Pilne? Wszystko jest pilne... ale zacznij od tego, co dziś zrobisz. Wracaj, jak będziesz miał."
    }
   ],
   "done": [
@@ -1848,7 +1850,7 @@ const MAIN_DIALOGS = {
    },
    {
     "k": "p",
-    "text": "Słyszałem, że przy kopule robi się coraz gorzej."
+    "text": "Słyszałam, że przy kopule robi się coraz gorzej."
    },
    {
     "k": "t",
@@ -1890,7 +1892,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Laboratorium izolacji, zapieczętowane szybą. Probówki w rzędach, część pełna ciemnej cieczy. Vane stoi przy terminalu i nie odwraca się, gdy wchodzisz."
+    "text": "Laboratorium izolacji, zapieczętowane szybą. Probówki w rzędach, część pełna ciemnej cieczy. Vane stoi przy terminalu i nie odwraca się, gdy się łączysz."
    },
    {
     "k": "t",
@@ -2348,7 +2350,7 @@ const MAIN_DIALOGS = {
    },
    {
     "k": "t",
-    "text": "Nie jestem pewien niczego! Ale wiem, że nic się nie zmieni, jeśli nikt nie spojrzy. Idź!"
+    "text": "Nie jestem pewna niczego! Ale wiem, że nic się nie zmieni, jeśli nikt nie spojrzy. Idź!"
    }
   ],
   "done": [

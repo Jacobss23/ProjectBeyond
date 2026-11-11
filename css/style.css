@@ -1967,7 +1967,7 @@ button.ghost { background: transparent; }
 button.sm.trash-btn { padding: 4px 6px; line-height: 0; display: inline-flex; align-items: center; justify-content: center; }
 button.sm.trash-btn svg { display: block; }
 
-/* Pasek jedzenia i picia w rajdzie */
-#food-bar { background: linear-gradient(90deg, #10b981, #22c55e); }
-#water-bar { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
-.cond-bar { margin-top: 4px; }
+/* Pasek prowiantu w rajdzie: gradient oliwkowo-niebieski, etykiety F i W */
+.prov-row { display: flex; justify-content: space-between; font-size: 12px; margin-top: 6px; opacity: 0.9; }
+#prov-bar { background: linear-gradient(90deg, #6b7a2a, #2f7fd6); }
+.prov-bar { margin-top: 2px; }

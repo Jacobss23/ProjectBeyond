@@ -110,8 +110,8 @@ function playDialogue(id, onEnd) {
         e.stopPropagation();
         choicePending = false;
         choicesEl.style.display = "none";
-        // Wybór zamienia się w linię gracza, a dialog toczy się dalej
-        lines.splice(idx, 1, { speaker: "player", text: opt.text });
+        // Wybór zamienia się w linię gracza i odtwarza tylko odpowiedzi tej opcji
+        lines.splice(idx, 1, { speaker: "player", text: opt.text }, ...(opt.lines || []));
         showLine();
       });
       choicesEl.appendChild(b);
@@ -127,7 +127,7 @@ function playDialogue(id, onEnd) {
     ov.querySelector(".dlg-hint").style.display = "";
     textEl.classList.toggle("dlg-narr", line.speaker === "narrator");
     const ch = CHARACTERS[line.speaker] || { name: line.speaker || "", portrait: null };
-    nameEl.textContent = line.speaker === "narrator" ? "" : (ch.name || "");
+    nameEl.textContent = line.speaker === "narrator" ? "Połączenie wideo" : (ch.name || "");
     if (ch.portrait) {
       portraitEl.style.backgroundImage = `url("${ch.portrait}")`;
       portraitEl.textContent = "";

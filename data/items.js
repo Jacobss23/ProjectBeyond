@@ -19,7 +19,7 @@ const ITEMS = {
   medkit: { name: "Apteczka", type: "consumable", size: [2, 1], value: 120, heal: 45, cures: ["krwawienie", "zlamanie"], tone: "heal", use: "Uniwersalna pomoc: leczy, zatrzymuje krwawienie i usztywnia złamania." },
   morphine: { name: "Strzykawka morfiny", type: "consumable", size: [1, 1], value: 85, cures: ["strach"], buff: "znieczulenie", buffDuration: 6, tone: "pain", use: "Znosi strach i tłumi ból: -30% obrażeń przez 6 tur." },
   stim_adrenal: { name: "Stymulator bojowy Adrenal-X", type: "consumable", size: [1, 1], value: 160, cures: ["strach"], buff: "adrenalina", buffDuration: 8, rarity: "rare", tone: "combat", use: "Bojowy zastrzyk: +25% obrażeń przez 8 tur i zdjęcie strachu." },
-  stim_bleedstop: { name: "Stymulant BleedStop", type: "consumable", size: [1, 1], value: 140, buff: "bleedStop", buffDuration: 15, rarity: "rare", tone: "bleedstop", use: "Zatrzymuje wszelkie krwawienie przez 15 tur." },
+  stim_bleedstop: { name: "Stymulant BleedStop", type: "consumable", size: [1, 1], value: 450, buff: "bleedStop", buffDuration: 15, rarity: "rare", tone: "bleedstop", use: "Zatrzymuje wszelkie krwawienie przez 15 tur." },
   saturn_cola: { name: "SaturnCola", type: "consumable", size: [1, 2], value: 110, buff: "saturnCola", buffDuration: 12, tone: "cola", use: "Napój bojowy: +10% celności i +15% szansy na cios krytyczny przez 12 tur." },
   decontam_kit: { name: "Pakiet dekontaminacyjny", type: "consumable", size: [1, 2], value: 130, cures: ["podraznienie", "szept"], tone: "virus", use: "Usuwa wirusa Szept z ciała oraz podrażnienia." },
   // Amunicja
@@ -104,6 +104,10 @@ const ITEMS = {
   nanite_serum: { name: "Serum nanitów", type: "consumable", size: [1, 1], value: 210, heal: 30, cures: ["krwawienie", "mocne_krwawienie", "podraznienie"], rarity: "rare", tone: "heal", use: "Nanoboty łatają tkankę: leczy 30 HP i zatrzymuje mocne krwawienie oraz podrażnienie." },
   adrenal_patch: { name: "Plaster adrenalinowy", type: "consumable", size: [1, 1], value: 140, buff: "adrenalina", buffDuration: 6, tone: "combat", use: "Przykleja się do skóry: +25% obrażeń przez 6 tur." },
   titan_ration: { name: "Koncentrat Tytana", type: "consumable", size: [1, 1], value: 65, buff: "sytosc", buffDuration: 10, tone: "food", use: "Gęsty posiłek z hydroponiki: pasywnie +15 HP co turę przez 10 tur." },
+  antitoksyna: { name: "Antytoksyna Szeptu", type: "consumable", size: [1, 1], value: 180, heal: 10, cures: ["szept", "podraznienie"], tone: "virus", use: "Neutralizuje Szept w krwiobiegu i łagodzi podrażnienia. Leczy +10 HP." },
+  bandaz_zbiorczy: { name: "Bandaż zbiorczy", type: "consumable", size: [1, 2], value: 90, heal: 20, cures: ["krwawienie", "mocne_krwawienie"], tone: "clamp", use: "Gruby opatrunek: +20 HP i zatrzymuje obydwa rodzaje krwawienia." },
+  racja_wojskowa: { name: "Racja wojskowa", type: "consumable", size: [1, 1], value: 55, hunger: 45, thirst: 10, tone: "food", use: "Pełnowartościowy posiłek: uzupełnia głód (+45%) i trochę pragnienie (+10%)." },
+  kompres_chlodzacy: { name: "Kompres chłodzący", type: "consumable", size: [1, 1], value: 40, heal: 5, cures: ["siniak", "podraznienie"], tone: "heal", use: "Chłodzi stłuczenia i podrażnienia. +5 HP." },
   shield_gel: { name: "Żel ochronny", type: "consumable", size: [1, 2], value: 95, cures: ["siniak", "podraznienie"], tone: "heal", use: "Chłodzi stłuczenia i podrażnienia. Nie leczy HP." },
   titan_plate: { name: "Płyta tytanowa", type: "armor", size: [3, 3], value: 1500, def: 10, rarity: "rare" },
   neural_chip: { name: "Neuroprocesor", type: "valuable", size: [1, 1], value: 700 },
@@ -117,6 +121,24 @@ const ITEMS = {
   weapon_case: { name: "Weapon Case", type: "container", size: [2, 4], value: 4000, price: 6000, container: { inner: [7, 6], label: "broń", types: ["weapon"] } },
   ammo_case: { name: "Ammo Case", type: "container", size: [2, 2], value: 800, container: { inner: [5, 5], label: "amunicja", types: ["ammo"] } },
   cardboard_box: { name: "Cardboard Box", type: "container", size: [3, 3], value: 300, container: { inner: [7, 7], label: "zwykłe przedmioty (junk, wartościowe, narzędzia)", types: ["junk", "valuable", "tool"] } },
+  rifle_orbit: { name: "Karabin szturmowy Orbit", type: "weapon", size: [3, 2], value: 780, dmg: [14, 22], acc: 0.78, ammo: "ammo556", rarity: "rare", category: "rifle" },
+  knife_throw: { name: "Nóż do rzucania", type: "weapon", size: [1, 1], value: 60, dmg: [5, 9], acc: 0.85, category: "melee_short" },
+  sledge_heavy: { name: "Młot kowalski", type: "weapon", size: [2, 3], value: 230, dmg: [13, 19], acc: 0.7, category: "melee_long" },
+  helmet_night: { name: "Hełm nocny z noktowizorem", type: "armor", size: [2, 2], value: 380, def: 4, rarity: "rare" },
+  armor_light_mesh: { name: "Lekka kolczuga", type: "armor", size: [2, 2], value: 130, def: 2 },
+  plate_heavy: { name: "Płyta ciężka Titan", type: "armor", size: [3, 3], value: 900, def: 9, rarity: "rare" },
+  multitool: { name: "Multitool wielofunkcyjny", type: "tool", size: [1, 1], value: 85, uses: 8 },
+  geiger: { name: "Licznik Geigera", type: "tool", size: [1, 1], value: 210 },
+  lockpick_set: { name: "Zestaw wytrychów", type: "tool", size: [1, 1], value: 140, uses: 6 },
+  diagnostic_scanner: { name: "Skaner diagnostyczny", type: "tool", size: [1, 2], value: 320 },
+  mining_drill: { name: "Wiertarka górnicza", type: "tool", size: [2, 2], value: 480, uses: 10, rarity: "rare" },
+  hack_deck: { name: "Deck hakerski", type: "tool", size: [2, 1], value: 720, uses: 6, rarity: "rare" },
+  flashlight_uv: { name: "Latarka UV", type: "tool", size: [1, 1], value: 60 },
+  ancient_coin: { name: "Starożytna moneta", type: "valuable", size: [1, 1], value: 150 },
+  ruby_shard: { name: "Odłamek rubinu", type: "valuable", size: [1, 1], value: 480, rarity: "rare" },
+  diamond_ring: { name: "Pierścień z diamentem", type: "valuable", size: [1, 1], value: 1600, rarity: "rare" },
+  broken_drone: { name: "Uszkodzony dron", type: "junk", size: [2, 2], value: 120 },
+  old_phone: { name: "Stary telefon", type: "junk", size: [1, 1], value: 45 },
 };
 
 // === SEKCJA: ZESTAWY STARTOWE ===
@@ -159,6 +181,13 @@ const RECIPES = [
   { id: "r_plasma_cannon", module: "Crafting", minLevel: 3, name: "Działo plazmowe Helios", in: [["plasma_carbine", 1], ["xenonite_crystal", 2], ["circuit", 4], ["fuel_cell", 2]], out: ["plasma_cannon", 1] },
   { id: "r_rail_gauss", module: "Crafting", minLevel: 3, name: "Karabin szynowy Caelum-X", in: [["sniper_dragoon", 1], ["platinum_wire", 3], ["titan_filter", 1]], out: ["rail_gauss", 1] },
   { id: "r_void_blade", module: "Crafting", minLevel: 3, name: "Ostrze Próżni Tytana", in: [["combat_knife", 1], ["titan_diamond", 2], ["gold_ingot", 1]], out: ["void_blade", 1] },
+  { id: "r_multitool", module: "Crafting", minLevel: 1, name: "Multitool wielofunkcyjny", in: [["scrap", 3], ["wires", 3], ["circuit", 1]], out: ["multitool", 1] },
+  { id: "r_sledge", module: "Crafting", minLevel: 1, name: "Młot kowalski", in: [["scrap", 6], ["cloth", 2]], out: ["sledge_heavy", 1] },
+  { id: "r_drill", module: "Crafting", minLevel: 2, name: "Wiertarka górnicza", in: [["fuel_cell", 1], ["scrap", 4], ["circuit", 2]], out: ["mining_drill", 1] },
+  { id: "r_scanner", module: "Crafting", minLevel: 2, name: "Skaner diagnostyczny", in: [["circuit", 2], ["wires", 2], ["scrap", 2]], out: ["diagnostic_scanner", 1] },
+  { id: "r_plate", module: "Crafting", minLevel: 3, name: "Płyta ciężka Titan", in: [["armor_vest", 1], ["scrap", 6], ["circuit", 2]], out: ["plate_heavy", 1] },
+  { id: "r_hack", module: "Crafting", minLevel: 3, name: "Deck hakerski", in: [["neural_chip", 1], ["circuit", 3], ["wires", 2]], out: ["hack_deck", 1] },
+  { id: "r_rifle_orbit", module: "Crafting", minLevel: 3, name: "Karabin szturmowy Orbit", in: [["smg", 1], ["scrap", 6], ["circuit", 3]], out: ["rifle_orbit", 1] },
 ];
 
 if (typeof window !== "undefined") {

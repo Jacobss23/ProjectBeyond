@@ -4,7 +4,7 @@
 const LORE = {
   virus: {
     name: "Szept",
-    desc: "Wirus, który przeskoczył między układami słonecznymi i galaktykami. Nie zabija od razu: zmienia gatunki, każdy po swojemu. Nie ma jednego lekarstwa, a im dłużej trwa zakażenie, tym mniej zostaje z człowieka.",
+    desc: "Wirus, który od sześćdziesięciu lat przeskakuje między układami słonecznymi i galaktykami. Nie zabija od razu: zmienia gatunki, każdy po swojemu. Nie ma jednego lekarstwa, a im dłużej trwa zakażenie, tym mniej zostaje z człowieka.",
   },
   strains: {
     umysl: {

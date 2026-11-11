@@ -404,8 +404,25 @@ const NUTR_CHANCE = {
 function nutritionTurn(kind) {
   const c = NUTR_CHANCE[kind];
   if (!c) return;
-  if (Math.random() < c.food) save.hunger = Math.max(0, (save.hunger ?? 100) - 2);
-  if (Math.random() < c.water) save.thirst = Math.max(0, (save.thirst ?? 100) - 2);
+  const h0 = save.hunger ?? 100;
+  const t0 = save.thirst ?? 100;
+  if (Math.random() < c.food) save.hunger = Math.max(0, h0 - 2);
+  if (Math.random() < c.water) save.thirst = Math.max(0, t0 - 2);
+  nutritionWarn("Jedzenie", h0, save.hunger ?? 100);
+  nutritionWarn("Picie", t0, save.thirst ?? 100);
+}
+
+// Jednorazowe ostrzeżenie, gdy wskaźnik przekroczy próg 50%, 20% lub 0%
+function nutritionWarn(label, before, after) {
+  for (const lvl of [50, 20, 0]) {
+    if (before > lvl && after <= lvl) {
+      const need = label === "Picie" ? "picia" : "jedzenia";
+      const txt = lvl === 0
+        ? `${label}: 0%. Organizm odmawia posłuszeństwa, każdy ruch kosztuje zdrowie.`
+        : `${label} spada do ${lvl}%. Szukaj ${need} zanim będzie gorzej.`;
+      log(`[${label.toUpperCase()}] ${txt}`, lvl <= 20 ? "danger" : "warn");
+    }
+  }
 }
 
 function tick(kind = "move") {
@@ -830,6 +847,7 @@ function stealthAttack() {
 
     if (sneakDmg >= eDef.hp) {
       raid.kills++;
+      raid.flags["kill_" + enemyId] = true;
       const xp = Math.round(eDef.xp * st.xpMult * 1.25);
       log(`Cichy atak natychmiast zlikwidował ${eDef.name}! +${xp} XP.`, "hit");
       raid.xp += xp;
@@ -1363,7 +1381,8 @@ function winCombat() {
   mountGround();
   flashWin();
   render();
-  if (e.boss) raid.flags["kill_" + e.id] = true;
+  // Każde zabójstwo liczy się do zleceń (save.kills po udanej ewakuacji), nie tylko bossy
+  raid.flags["kill_" + e.id] = true;
 }
 
 function flee() {
@@ -1603,15 +1622,15 @@ function finish(success) {
   if (ups) setTimeout(() => edgeGlow("level"), 900);
 }
 
-// Pasek głodu i pragnienia w rajdzie (0–100%)
+// Pasek „Prowiant” w rajdzie: średnia jedzenia i picia (0–100%), z etykietami F (jedzenie) i W (woda)
 function renderNutritionHud() {
-  const hunger = Math.max(0, Math.min(100, save.hunger ?? 100));
-  const thirst = Math.max(0, Math.min(100, save.thirst ?? 100));
-  if ($("food-bar")) {
-    $("food-bar").style.width = `${hunger}%`;
-    $("food-text").textContent = `Jedzenie ${Math.round(hunger)}%`;
-    $("water-bar").style.width = `${thirst}%`;
-    $("water-text").textContent = `Picie ${Math.round(thirst)}%`;
+  const hunger = Math.max(0, Math.min(100, Math.round(save.hunger ?? 100)));
+  const thirst = Math.max(0, Math.min(100, Math.round(save.thirst ?? 100)));
+  const avg = (hunger + thirst) / 2;
+  if ($("prov-bar")) {
+    $("prov-bar").style.width = `${avg}%`;
+    $("prov-f").textContent = `F: ${hunger}%`;
+    $("prov-w").textContent = `W: ${thirst}%`;
   }
 }
 
@@ -2741,6 +2760,31 @@ function renderMinimap() {
       rects += `<rect x="${cx - r}" y="${cy - r}" width="${r * 2}" height="${r * 2}" fill="${fill}" stroke="${stroke}"/>`;
       if (c.kind === "ext") rects += `<text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="11" fill="#d1fae5">E</text>`;
     }
+  });
+
+  // Znaczniki na pokojach: dźwignia (D), quest (Q), łup do przeszukania (kropka), przeszukany (✓)
+  all.forEach((c) => {
+    if (c.kind === "f") return;
+    const node = MAP.nodes[c.id];
+    if (!node) return;
+    const cx = sx(c.x), cy = sy(c.y), r = S * 0.36;
+    const searched = !!raid.searched[c.id];
+    let mk = "";
+    if (MAP.evac && MAP.evac.lever && c.id === MAP.evac.lever.node) {
+      const col = raid.evacOpen ? "#22c55e" : "#f97316";
+      mk += `<text x="${cx - r + 4}" y="${cy + r - 3}" font-size="10" font-weight="bold" fill="${col}"><title>${raid.evacOpen ? "Dźwignia ewakuacji uruchomiona" : "Dźwignia ewakuacji"}</title>D</text>`;
+    }
+    const hasQuest = (node.guaranteed || []).some(([id]) => ITEMS[id] && ITEMS[id].quest);
+    if (hasQuest && !searched) {
+      mk += `<text x="${cx - r + 4}" y="${cy - r + 10}" font-size="10" font-weight="bold" fill="#a78bfa"><title>Quest: przedmiot do znalezienia</title>Q</text>`;
+    }
+    if (node.loot && !searched) {
+      mk += `<circle cx="${cx + r - 4}" cy="${cy - r + 4}" r="2.5" fill="#fbbf24"><title>Do przeszukania</title></circle>`;
+    }
+    if (searched) {
+      mk += `<text x="${cx + r - 8}" y="${cy + r - 3}" font-size="9" fill="#94a3b8"><title>Przeszukany</title>✓</text>`;
+    }
+    rects += mk;
   });
 
   // Klawisze WASD wokół pokoju, w którym stoi gracz

@@ -1,6 +1,6 @@
 # HANDOFF — Space Tarkov RPG
 
-> **Aktualna wersja:** v.1.79.2 rozmowy z handlarzem tylko o zleceniach głównych, bez nazw zleceń (poprzednio v.1.79.1) (szczegóły zmian: sekcja 15.10).
+> **Aktualna wersja:** v.1.79.4 (poprawka questa Patrol Zachodni, sekcja 15.11). Poprzednio v.1.79.2 rozmowy z handlarzem tylko o zleceniach głównych, bez nazw zleceń (poprzednio v.1.79.1) (szczegóły zmian: sekcja 15.10).
 >
 > **Status:** działający prototyp po serii zmian: niezawodne sterowanie `R` w rajdzie, wymuszony tutorial schronu po pierwszej misji, trzeci moduł startowy `Komunikacja`, znaczniki węzłów, „Przyjmij wszystkie zlecenia”, filtrowanie questów po odblokowanych handlarzach, sloty ekwipunku i suwaki ilości u handlarzy.
 >
@@ -1147,6 +1147,13 @@ Najważniejsze zasady:
   - Funkcja `connectTrader()` w pierwszej kolejności pozwala oddać gotowe zlecenia (główne lub tierowe), przypomina o trwających zadaniach lub losuje dopasowaną kwestię z `TRADER_IDLE`.
 
 ---
+
+### 15.11. Poprawka questa „Patrol Zachodni” (v.1.79.3)
+
+- Przyczyna: `saga_trader6_1` wymagał `manual` (Instrukcja serwisowa, `quest: true`). Taki przedmiot nie trafia do magazynu po rajdzie, a `turnInQuest` i `mainBlocker` liczyły go w magazynie/zestawie, więc zadanie było nie do oddania. Instrukcja była gwarantowana tylko na tutorialu Marsa.
+- Naprawa: `questItemHeld(q, r)` (`js/hideout.js`) liczy przedmioty fabularne z `save.questCarry`, a `turnInQuest` zużywa je z `questCarry`. Instrukcja jest gwarantowana w węźle `Sala Katalogowa` (`titan_archive`, `data/maps.js`). Nie jest w Titan Dome, bo tam są wszystkie questy saga.
+- Uwaga: `part_gasket`, `part_injector` i `part_coil` (questy `saga_trader3_*`, `saga_trader7_3`, `saga_trader8_3`) mają tę samą klasę problemu. Turn-in działa już dla nich, ale źródła łupu poza tutorialem nadal nie istnieją.
+- Test: `/tmp/patrol.py` (oddanie z wyniesioną instrukcją przechodzi, bez wyniesienia blokuje).
 
 ## 16. Weryfikacja
 
