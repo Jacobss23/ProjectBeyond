@@ -135,7 +135,7 @@ const ITEMS = {
   mining_drill: { name: "Wiertarka górnicza", type: "tool", size: [2, 2], value: 480, uses: 10, rarity: "rare" },
   hack_deck: { name: "Deck hakerski", type: "tool", size: [2, 1], value: 720, uses: 6, rarity: "rare" },
   flashlight_uv: { name: "Latarka UV", type: "tool", size: [1, 1], value: 60 },
-  ancient_coin: { name: "Starożytna moneta", type: "valuable", size: [1, 1], value: 150 },
+  ancient_coin: { name: "Starożytna moneta", type: "valuable", size: [1, 1], value: 300 },
   ruby_shard: { name: "Odłamek rubinu", type: "valuable", size: [1, 1], value: 480, rarity: "rare" },
   diamond_ring: { name: "Pierścień z diamentem", type: "valuable", size: [1, 1], value: 1600, rarity: "rare" },
   broken_drone: { name: "Uszkodzony dron", type: "junk", size: [2, 2], value: 120 },

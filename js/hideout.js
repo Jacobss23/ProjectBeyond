@@ -1869,12 +1869,25 @@ function showMapDetail(id) {
   diff.textContent = "Trudność: " + "★".repeat(full) + (half ? "◐" : "") + "☆".repeat(Math.max(0, 5 - full - half)) + " (" + t + "/5)";
   det.append(h, p, diff);
 
-  if (moduleLevel(save, "Safe system") >= 1) {
+  const safeLvl = moduleLevel(save, "Safe system");
+  if (safeLvl >= 1) {
     const nodes = Object.values(m.nodes || {});
-    const radar = document.createElement("p");
-    radar.className = "radar";
-    radar.textContent = `Safe System · lokacji: ${nodes.length} · wrogów: ~${nodes.filter((n) => n.enemy).length} · ewakuacji: ${nodes.filter((n) => n.extract).length}`;
-    det.appendChild(radar);
+    const withEnemy = nodes.filter((n) => n.enemy).length;
+    const evac = nodes.filter((n) => n.extract).length;
+    const lines = [`Safe System: pomieszczeń z wrogami ${withEnemy} z ${nodes.length}, punkty ewakuacji ${evac}.`];
+    const locked = nodes.filter((n) => n.keyLock);
+    if (locked.length) lines.push(`Zamknięte pomieszczenia: ${locked.map((n) => `${n.name} (${n.keyLabel || "karta dostępu"})`).join(", ")}.`);
+    if (safeLvl >= 2) {
+      const targets = QUESTS.filter((q) => q.task && q.task.map === id && save.quests[q.id] === "active").map((q) => (m.nodes[q.task.node] || {}).name || q.task.node);
+      lines.push(targets.length ? `Cele zadań na mapie: ${[...new Set(targets)].join(", ")}.` : "Brak aktywnych celów zadań na tej mapie.");
+      lines.push(`Pomieszczenia z łupem: ${nodes.filter((n) => n.loot).length}.`);
+    }
+    lines.forEach((t) => {
+      const radar = document.createElement("p");
+      radar.className = "radar";
+      radar.textContent = t;
+      det.appendChild(radar);
+    });
   }
 
   det.appendChild(

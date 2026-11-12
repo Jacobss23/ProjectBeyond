@@ -77,11 +77,11 @@ const SHIP_MODULES = [
     id: "Safe system",
     name: "Safe System (Radar Intel)",
     maxLevel: 2,
-    desc: "Pre-raid recon: pozwala przeskanować wybraną mapę, ujawniając średnią liczbę wrogów, questy i loot.",
+    desc: "Rozpoznanie: przed rajdem pokazuje liczbę pomieszczeń z wrogami, zamknięte pomieszczenia i punkty ewakuacji. W rajdzie raz na rajd skanuje okolicę.",
     levels: [
       { level: 0, title: "Radar offline", desc: "Brak rozpoznania przed rajdem.", cost: 0, items: [] },
-      { level: 1, title: "Skaner orbitalny", desc: "Wyświetla mini-mapę ze średnią liczbą wrogów i punktami ewakuacji.", cost: 300, items: [["wires", 4], ["circuit", 2]] },
-      { level: 2, title: "Sieć taktyczna SAR", desc: "Ujawnia cele questów, skrytki z łupem i daje +10% szansy na ucieczkę.", cost: 900, items: [["data_chip", 1], ["circuit", 3]] }
+      { level: 1, title: "Skaner orbitalny", desc: "Przed rajdem: liczba pomieszczeń z wrogami, zamknięte pomieszczenia, punkty ewakuacji. W rajdzie: skan 2 pola wokół (wróg tak/nie).", cost: 300, items: [["wires", 4], ["circuit", 2]] },
+      { level: 2, title: "Sieć taktyczna SAR", desc: "Przed rajdem także cele zadań na mapie. W rajdzie: skan 3 pola wokół, łup, przeszukane pomieszczenia, cele zadań i szansa wrogów.", cost: 900, items: [["data_chip", 1], ["circuit", 3]] }
     ]
   }
 ];

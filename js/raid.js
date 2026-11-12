@@ -2075,25 +2075,52 @@ function moveSlots(node, enabled) {
   return out;
 }
 
+// Radar Safe System w rajdzie: jednorazowy skan okolicy w raz na rajd.
+// Zasięg: poz. 1 = 2 pola, poz. 2 = 3 pola. Poz. 1 pokazuje wrogów (tak/nie), poz. 2 dodatkowo szansę, łup, przeszukane, cele zadań i zamknięte pomieszczenia.
 function showSafeRadar() {
   const safeLvl = moduleLevel(save, "Safe system");
-  log(`--- RAPORT RADARU SAFE SYSTEM (POZ. ${safeLvl}) ---`, "tip");
-  MAP.nodes[raid.node].exits.forEach((exitId) => {
-    if (!exitId) return;
-    const exNode = MAP.nodes[exitId];
-    let info = `Lokacja [${exNode.name}]: `;
-    if (exNode.enemy) {
-      const e = ENEMIES[exNode.enemy.id];
-      info += `Wykryto zagrożenie: ${e?.name || exNode.enemy.id} (~${Math.round(exNode.enemy.chance * 100)}% szans). `;
-    } else {
-      info += "Brak zagrożenia wrogami. ";
-    }
-    if (safeLvl >= 2) {
-      if (exNode.loot) info += `[Loot: ${exNode.loot.table} x${exNode.loot.rolls}] `;
-      if (exNode.guaranteed) info += `[Kluczowy element/quest!] `;
-    }
-    log(info, "tip");
-  });
+  if (safeLvl < 1) return;
+  if (raid.radarUsed) return log("Radar wykonał już skan w tym rajdzie.", "warn");
+  raid.radarUsed = true;
+  const depth = safeLvl >= 2 ? 3 : 2;
+  const dist = { [raid.node]: 0 };
+  const queue = [raid.node];
+  while (queue.length) {
+    const cur = queue.shift();
+    if (dist[cur] >= depth) continue;
+    (MAP.nodes[cur].exits || []).forEach((x) => {
+      if (x && MAP.nodes[x] && dist[x] === undefined) {
+        dist[x] = dist[cur] + 1;
+        queue.push(x);
+      }
+    });
+  }
+  const mapKey = params.get("map") || "tutorial";
+  const questNodes = new Set(
+    taskQuests()
+      .filter((q) => q.task.map === mapKey && save.quests[q.id] === "active" && !raid.flags[q.id])
+      .map((q) => q.task.node)
+  );
+  log(`--- SKAN SAFE SYSTEM (poz. ${safeLvl}, zasięg ${depth} pola) ---`, "tip");
+  Object.keys(dist)
+    .filter((id) => id !== raid.node)
+    .sort((a, b) => dist[a] - dist[b])
+    .forEach((id) => {
+      const n = MAP.nodes[id];
+      const parts = [];
+      if (n.enemy) {
+        const en = (ENEMIES[n.enemy.id] || {}).name || n.enemy.id;
+        parts.push(safeLvl >= 2 ? `wróg: ${en} (${Math.round(n.enemy.chance * 100)}%)` : "wróg");
+      } else {
+        parts.push("bez wrogów");
+      }
+      if (safeLvl >= 2) {
+        if (n.keyLock && roomLocked(n)) parts.push(`zamknięte (${n.keyLabel || "karta dostępu"})`);
+        if (n.loot) parts.push(raid.searched[id] ? "przeszukane" : "łup");
+        if (questNodes.has(id)) parts.push("CEL ZADANIA");
+      }
+      log(`[${n.name}] (${dist[id]} pola): ${parts.join(", ")}.`, "tip");
+    });
 }
 
 // === SEKCJA: ZADANIA W RAJDZIE (MINIGRY) ===
