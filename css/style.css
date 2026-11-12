@@ -1971,3 +1971,6 @@ button.sm.trash-btn svg { display: block; }
 .prov-row { display: flex; justify-content: space-between; font-size: 12px; margin-top: 6px; opacity: 0.9; }
 #prov-bar { background: linear-gradient(90deg, #6b7a2a, #2f7fd6); }
 .prov-bar { margin-top: 2px; }
+
+/* === v1.80.0: numer wersji w lewym dolnym rogu (tylko numer) === */
+#build-version { position: fixed; left: 8px; bottom: 6px; font-family: monospace; font-size: 11px; color: #94a3b8; opacity: 0.6; pointer-events: none; z-index: 9999; }

@@ -556,6 +556,17 @@ function useMedicalInHideout(inst, view) {
     logText += `Przywrócono +${healVal} HP (Stan: ${save.hp}/${save.maxHp}). `;
   }
 
+  // 2b. Dokumentacja umiejętności: +poziomy losowej umiejętności
+  if (it.skillDoc) {
+    const sid = applySkillDoc(save, it.skillDoc);
+    if (sid) {
+      used = true;
+      logText += `+${it.skillDoc} poziomy w umiejętności „${(SKILLS[sid] || {}).name || sid}”. `;
+    } else {
+      logText += "Nie ma już umiejętności do rozwinięcia. ";
+    }
+  }
+
   // 3. Pożywienie i picie: uzupełnia wskaźnik (0–100), tylko gdy jest poniżej 100
   if (it.hunger && save.hunger < 100) {
     save.hunger = Math.min(100, save.hunger + it.hunger);
@@ -828,6 +839,50 @@ function renderTrader() {
 
   // Renderuj zlecenia tego konkretnego handlarza w oknie handlu
   renderTraderQuestsInShop(tr);
+  renderBarter(tr, tLvl);
+}
+
+// Wymiana (barter): oferty tradera na karty dostępu, płatne rzadkimi przedmiotami z magazynu/zestawu.
+function renderBarter(tr, tLvl) {
+  const host = $("trader-grid") && $("trader-grid").parentElement;
+  if (!host) return;
+  host.querySelectorAll(".barter-box").forEach((el) => el.remove());
+  const offers = (tr.barter || []).filter((o) => tLvl >= o.tier);
+  if (!offers.length) return;
+  const box = document.createElement("div");
+  box.className = "barter-box";
+  box.style.marginTop = "10px";
+  box.innerHTML = '<div style="color:#a78bfa; font-size:0.8rem; margin-bottom:4px;">WYMIANA (karta dostępu za rzadkie przedmioty)</div>';
+  (tr.barter || []).forEach((o, idx) => {
+    if (tLvl < o.tier) return;
+    const cost = o.cost.map(([id, q]) => `${q}x ${ITEMS[id]?.name || id}`).join(", ");
+    const can = o.cost.every(([id, q]) => countItem(save.stash, id) + countItem(save.loadout, id) >= q);
+    const b = document.createElement("button");
+    b.className = "sm";
+    b.disabled = !can;
+    b.textContent = `${ITEMS[o.give]?.name || o.give} za: ${cost}`;
+    b.title = can ? "Wymień" : "Brakuje przedmiotów do wymiany";
+    b.onclick = () => barterTrade(tr.id, idx);
+    box.appendChild(b);
+  });
+  host.appendChild(box);
+}
+
+function barterTrade(trId, idx) {
+  const tr = TRADERS.find((t) => t.id === trId);
+  const o = tr && tr.barter && tr.barter[idx];
+  if (!o) return;
+  if (typeof getTraderTier === "function" && getTraderTier(save, trId) < o.tier) return say("Ta oferta jest jeszcze zablokowana.", "warn");
+  if (!o.cost.every(([id, q]) => countItem(save.stash, id) + countItem(save.loadout, id) >= q)) return say("Brakuje przedmiotów do wymiany.", "warn");
+  o.cost.forEach(([id, q]) => {
+    const fromStash = Math.min(q, countItem(save.stash, id));
+    if (fromStash) removeById(save.stash, id, fromStash);
+    if (q - fromStash) removeById(save.loadout, id, q - fromStash);
+  });
+  addToContainer(save.stash, o.give, 1);
+  say(`Wymieniono na: ${ITEMS[o.give]?.name || o.give}.`, "hit");
+  persist();
+  renderTrader();
 }
 
 function renderTraderQuestsInShop(tr) {
@@ -1943,9 +1998,9 @@ function rest() {
   }
 
   grantSkillXp(save, "witalnosc", 10);
-  // Odpoczynek przywraca co najwyżej 35% jedzenia i 30% picia (więcej trzeba zjeść i wypić)
-  save.hunger = Math.max(save.hunger ?? 100, 35);
-  save.thirst = Math.max(save.thirst ?? 100, 30);
+  // Odpoczynek naładowuje jedzenie i picie do 35/50 na pasku (= 70 w skali 0-100). Wyżej nie obniża.
+  save.hunger = Math.max(save.hunger ?? 100, 70);
+  save.thirst = Math.max(save.thirst ?? 100, 70);
   markTour("rested");
   say(`Odpoczywasz w schronie (5 minut). Regeneracja HP i leczenie obrażeń ciała (${save.hp} / ${save.maxHp} HP).`, "hit");
   edgeGlow("heal");

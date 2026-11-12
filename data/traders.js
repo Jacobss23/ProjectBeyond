@@ -60,6 +60,7 @@ const TRADERS = [
     buyMult: 1.6,
     sellMult: 1.2,
     color: "#8b5cf6", // Violet
+        barter: [{ tier: 1, give: "card_helix", cost: [["quantum_core", 1], ["nanite_serum", 1]] }],
         stock: {
       0: ["data_chip", "wires", "old_phone"],
       1: ["circuit", "neural_chip", "stim_adrenal", "lockpick_set"],
@@ -86,6 +87,7 @@ const TRADERS = [
     buyMult: 1.3,
     sellMult: 1.1,
     color: "#eab308", // Gold
+        barter: [{ tier: 1, give: "card_vega", cost: [["xenonite_crystal", 1], ["helium3", 2]] }],
         stock: {
       0: ["mining_glove", "flashlight_uv"],
       1: ["ore_titanium", "meteor_iron", "xenonite_crystal"],
@@ -99,6 +101,7 @@ const TRADERS = [
     buyMult: 1.7,
     sellMult: 1.3,
     color: "#ec4899", // Magenta
+        barter: [{ tier: 1, give: "card_dome", cost: [["ruby_shard", 1], ["lunar_pearl", 1]] }],
         stock: {
       0: ["pocket_watch", "holo_portrait"],
       1: ["relic_old_earth", "lunar_pearl"],

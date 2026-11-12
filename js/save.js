@@ -367,6 +367,21 @@ function grantSkillXp(s, skillId, amount) {
   return ups;
 }
 
+// Dokumentacja umiejętności: +n pełnych poziomów losowej umiejętności, która nie jest na maksimum. Zwraca id umiejętności.
+function applySkillDoc(s, n) {
+  s.skills = s.skills || {};
+  const cap = s.maxSkillCap || 15;
+  const keys = Object.keys(typeof SKILLS !== "undefined" ? SKILLS : {});
+  const pool = keys.filter((k) => ((s.skills[k] || {}).level || 0) < cap);
+  if (!pool.length) return null;
+  const id = pool[Math.floor(Math.random() * pool.length)];
+  const sk = s.skills[id] || { level: 0, xp: 0 };
+  s.skills[id] = sk;
+  sk.level = Math.min(cap, sk.level + n);
+  sk.xp = 0;
+  return id;
+}
+
 // === SEKCJA: DEDYKOWANE SLOTY WYPOSAŻENIA (PANCERZ, PALNA, BIAŁA) ===
 function hasHolster(s) {
   if (!s) return false;

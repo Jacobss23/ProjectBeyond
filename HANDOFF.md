@@ -1,3 +1,27 @@
+## Aktualizacja v.1.80.3 (karty dostępu, zamknięte skarbce)
+
+- v.1.80.3: celność end-game broni podniesiona (działo Ares 0.86, Helios 0.93, Caelum-X 0.97, Ostrze Próżni 0.98). Kopuła Tytana: szansa na wroga w każdym węźle ×0.4 (pierwsza mapa). Nie zmieniano dmg.
+- v.1.80.2: 5x P na Marsie ustawia moduł Stash na maksymalny poziom (`maxLevel`, czyli 14x24).
+- v.1.80.1: każda broń ma pole `caliber` (z amunicji; broń biała `—`), kaliber widoczny w info o broni (`grid.js`). Działo szynowe Ares używa `ammo_rail` (nowa amunicja). Skarbiec Kopuły zawiera 2 stosy `ammo_rail` (po 10). Każdy skarbiec daje 3 losowe łupy z `vault_rare` (bez broni i pancerza).
+
+- Nowe pomieszczenia z zamkiem: `vault_dome` (Kopuła Tytana, `apartments`), `vault_vega` (Wega-7, `medbay`), `vault_helix` (Fabryka Helix, `storage`). Pola węzła: `keyLock` (id klucza), `keyLabel`, `guaranteed` (1 sztuka), `codeChance: 0.15` (kod dostępu), `loot` (tabela `vault_rare`).
+- Karty: `card_dome`, `card_vega`, `card_helix` (typ `tool`, `keyFor`). Nie są w tabelach łupu ani w sklepie z zakupem. Zdobywa się je rzadko w łupie (wagi 1-2 w tabelach tech, military, boss_archive, titan_brute, titan_military) lub przez wymianę (`barter` u tradera: Jax -> card_dome, Thorne -> card_vega, Val -> card_helix; tier 1).
+- Otwieranie: przycisk `[K]` w pomieszczeniu (`useKeycard` w raid.js) zużywa kartę z plecaka. Stan zapisany w `save.openedRooms[keyLock]`, więc pomieszczenie zostaje otwarte w kolejnych rajdach.
+- Przeszukanie zamkniętego pomieszczenia jest zablokowane (`roomLocked` w `search()`).
+- Dokumentacja umiejętności `doc_skill` (`skillDoc: 3`): `applySkillDoc` w save.js dodaje 3 poziomy losowej umiejętności poniżej maksimum (w schronie i na rajdzie).
+- Nowe przedmioty końcowe: `rail_cannon` (heavy, max 1), `armor_singularity` (def 12, max 1), `access_code`.
+- Test dev: `testSkipMars` (5x P na Marsie) dodaje `card_dome`.
+- Numer wersji w lewym dolnym rogu: `#build-version` na index, hideout, raid, creator (styl w css/style.css).
+- Wymiana: przetestowana w Chromium (karta w magazynie, surowce zużyte). Wejście do skarbca w rajdzie NIE przetestowane end-to-end.
+
+## Aktualizacja v.1.79.5 (odpoczynek: jedzenie i picie)
+
+- Baza: kod z paczki `v.1.79.4 github-push` (zawiera poprawkę `questItemHeld`, czyli zlecenia z przedmiotami fabularnymi liczone z `questCarry`; zachowana).
+- **Odpoczynek w schronie** (`rest()` w `js/hideout.js`): jedzenie i picie naładowują się do **70 w skali 0-100**, czyli **35/50 na pasku** (pasek pokazuje połowę wartości). Wyższe wartości nie są obniżane (`Math.max`).
+- Wcześniej floor był 35 / 30 w skali 0-100 (co dawało 17/50 i 15/50 na pasku).
+- Test: Playwright, zapis testowy, `rest()` z 5/10 daje 70/70; z 90/95 zostaje 90/95.
+- Uwaga o numeracji: ta paczka jest od 1.79.4, a nie od 1.88.x z innego katalogu roboczego. Jeśli wersje mają być jedną linią, trzeba to ujednolicić.
+
 # HANDOFF — Space Tarkov RPG
 
 > **Aktualna wersja:** v.1.79.4 (poprawka questa Patrol Zachodni, sekcja 15.11). Poprzednio v.1.79.2 rozmowy z handlarzem tylko o zleceniach głównych, bez nazw zleceń (poprzednio v.1.79.1) (szczegóły zmian: sekcja 15.10).

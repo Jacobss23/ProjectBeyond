@@ -178,6 +178,7 @@ function itemStats(id) {
   const it = ITEMS[id];
   const lines = [`Rozmiar: ${baseSize(id).join("x")}`];
   if (it.type === "weapon") {
+    lines.push(`Kaliber: ${it.caliber || "—"}`);
     lines.push(`Obrażenia: ${it.dmg[0]}-${it.dmg[1]}, celność: ${Math.round(it.acc * 100)}%`);
     if (it.ammo && ITEMS[it.ammo]) lines.push(`Amunicja: ${ITEMS[it.ammo].name}`);
   }

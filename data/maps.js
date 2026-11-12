@@ -59,6 +59,7 @@ const LOOT = {
     { id: "multitool", w: 5, min: 1, max: 1 },
     { id: "mining_drill", w: 3, min: 1, max: 1 },
     { id: "hack_deck", w: 1, min: 1, max: 1 },
+    { id: "card_dome", w: 1, min: 1, max: 1 },
   ],
   military: [
     { id: "ammo9", w: 22, min: 8, max: 18 },
@@ -81,6 +82,7 @@ const LOOT = {
     { id: "plate_heavy", w: 1, min: 1, max: 1 },
     { id: "ruby_shard", w: 3, min: 1, max: 1 },
     { id: "diamond_ring", w: 1, min: 1, max: 1 },
+    { id: "card_helix", w: 1, min: 1, max: 1 },
   ],
   boss_archive: [
     { id: "quantum_core", w: 6, min: 1, max: 1 },
@@ -91,6 +93,7 @@ const LOOT = {
     { id: "titan_fusion_core", w: 6, min: 1, max: 1 },
     { id: "ruby_shard", w: 4, min: 1, max: 1 },
     { id: "diamond_ring", w: 2, min: 1, max: 1 },
+    { id: "card_vega", w: 2, min: 1, max: 1 },
   ],
   zombie: [
     { id: "cloth", w: 40, min: 1, max: 2 },
@@ -125,6 +128,7 @@ const LOOT = {
     { id: "axe_fire", w: 15, min: 1, max: 1 },
     { id: "vest_kevlar", w: 10, min: 1, max: 1 },
     { id: "plate_heavy", w: 6, min: 1, max: 1 },
+    { id: "card_dome", w: 1, min: 1, max: 1 },
   ],
   titan_military: [
     { id: "ammo556", w: 25, min: 10, max: 20 },
@@ -134,8 +138,22 @@ const LOOT = {
     { id: "stim_adrenal", w: 15, min: 1, max: 1 },
     { id: "vest_kevlar", w: 10, min: 1, max: 1 },
     { id: "rifle_orbit", w: 4, min: 1, max: 1 },
+    { id: "card_vega", w: 1, min: 1, max: 1 },
   ],
-};
+  vault_rare: [
+    { id: "ruby_shard", w: 4, min: 1, max: 1 },
+    { id: "ancient_coin", w: 5, min: 1, max: 1 },
+    { id: "lunar_pearl", w: 2, min: 1, max: 1 },
+    { id: "diamond_ring", w: 2, min: 1, max: 1 },
+
+    { id: "gold_ingot", w: 3, min: 1, max: 1 },
+    { id: "titan_diamond", w: 2, min: 1, max: 1 },
+    { id: "sapphire_tesla", w: 2, min: 1, max: 1 },
+    { id: "golden_chalice", w: 1, min: 1, max: 1 },
+    { id: "relic_old_earth", w: 2, min: 1, max: 1 },
+    { id: "holo_portrait", w: 4, min: 1, max: 1 },
+    { id: "pocket_watch", w: 4, min: 1, max: 1 },
+  ],};
 
 // === SEKCJA: MAPY ===
 const MAPS = {
@@ -232,35 +250,45 @@ const MAPS = {
         desc: "Wielopoziomowy deptak handlowy zasypany szkłem i wrakami automatów. W cieniu słychać nieludzki, szaleńczy ryk biegnącego zakażonego.",
         exits: ["airlock_a", "subway", "apartments"],
         loot: { table: "supply", rolls: 2 },
-        enemy: { id: "infected_runner", chance: 0.8 },
+        enemy: { id: "infected_runner", chance: 0.32 },
       },
       vent_tunnel: {
         name: "Tunel Wentylacyjny",
         desc: "Ciasny ciąg rurociągów filtracyjnych tlenu. Zardzewiałe kraty i plamy toksycznego kondensatu na ścianach.",
         exits: ["airlock_a", "hydro_park"],
         loot: { table: "tech", rolls: 2 },
-        enemy: { id: "infected_stalker", chance: 0.5 },
+        enemy: { id: "infected_stalker", chance: 0.2 },
+      },
+      vault_dome: {
+        name: "Zamknięty Skarbiec Kopuły",
+        desc: "Grube drzwi z logo Rady Kopuły. Czytnik mruga na czerwono i czeka na kartę dostępu.",
+        exits: ["apartments"],
+        keyLock: "dome",
+        keyLabel: "Karta Kopuły Tytana",
+        loot: { table: "vault_rare", rolls: 3 },
+        guaranteed: [["rail_cannon", 1], ["ammo_rail", 10], ["ammo_rail", 10]],
+        codeChance: 0.15,
       },
       apartments: {
         name: "Sektor Mieszkalny Hab-4",
         desc: "Wyważone grodzie bloków mieszkalnych. Wszędzie porzucone bagaże ewakuacyjne i ślady gwałtownej paniki mieszkańców.",
-        exits: ["concourse", "hospital"],
+        exits: ["concourse", "hospital", "vault_dome"],
         loot: { table: "supply", rolls: 2 },
-        enemy: { id: "infected_runner", chance: 0.75 },
+        enemy: { id: "infected_runner", chance: 0.3 },
       },
       subway: {
         name: "Stacja Kolejki Szynowej",
         desc: "Zalana metanem stacja szybkiej kolei kopuły. Wagoniki pociągu magnetycznego ugrzęzły w zablokowanym tunelu tranzytowym.",
         exits: ["concourse", "reactor_core"],
         loot: { table: "junk", rolls: 3 },
-        enemy: { id: "infected_runner", chance: 0.7 },
+        enemy: { id: "infected_runner", chance: 0.28 },
       },
       hospital: {
         name: "Szpital Kwarantanny",
         desc: "Polowy oddział zakaźny. Wybite komory bio-izolacji, rozbity sprzęt podtrzymywania życia i kałuże żrącej żółci.",
         exits: ["apartments", "hydro_park", "quarantine_lab"],
         loot: { table: "medical", rolls: 3 },
-        enemy: { id: "infected_spitter_heavy", chance: 0.85 },
+        enemy: { id: "infected_spitter_heavy", chance: 0.34 },
       },
       quarantine_lab: {
         name: "Laboratorium Izolacji Biohazard",
@@ -268,14 +296,14 @@ const MAPS = {
         exits: ["hospital"],
         loot: { table: "tech", rolls: 3 },
         guaranteed: [["pathogen_clot", 1]],
-        enemy: { id: "infected_brute_miner", chance: 0.95 },
+        enemy: { id: "infected_brute_miner", chance: 0.38 },
       },
       hydro_park: {
         name: "Zdziczały Ogród Biosfery",
         desc: "Syntetyczna roślinność przerosła alejki spacerowe. W gęstych paprociach bezgłośnie przemieszcza się drapieżny tropiciel.",
         exits: ["vent_tunnel", "hospital", "evac_pad"],
         loot: { table: "supply", rolls: 2 },
-        enemy: { id: "infected_stalker", chance: 0.8 },
+        enemy: { id: "infected_stalker", chance: 0.32 },
       },
       reactor_core: {
         name: "Rdzeń Termojądrowy Kopuły",
@@ -283,7 +311,7 @@ const MAPS = {
         exits: ["subway", "evac_pad"],
         loot: { table: "tech", rolls: 3 },
         guaranteed: [["titan_fusion_core", 1]],
-        enemy: { id: "titan_raider", chance: 0.75 },
+        enemy: { id: "titan_raider", chance: 0.3 },
         hazard: { type: "radiation", dmg: 7, label: "promieniowanie reaktora" },
       },
       evac_pad: {
@@ -322,10 +350,20 @@ const MAPS = {
         loot: { table: "tech", rolls: 2 },
         enemy: { id: "zombie_crawler", chance: 0.5 },
       },
+      vault_vega: {
+        name: "Zamknięte Archiwum Wegi-7",
+        desc: "Chłodne pomieszczenie z szafami pancerza testowego. Zamek elektroniczny wymaga karty Wegi-7.",
+        exits: ["medbay"],
+        keyLock: "vega",
+        keyLabel: "Karta Wegi-7",
+        loot: { table: "vault_rare", rolls: 3 },
+        guaranteed: [["armor_singularity", 1]],
+        codeChance: 0.15,
+      },
       medbay: {
         name: "Skrzydło medyczne",
         desc: "Zdemolowane ambulatorium. Rozbite kapsuły kriogeniczne i porozrzucane medykamenty.",
-        exits: ["hall", "lab"],
+        exits: ["hall", "lab", "vault_vega"],
         loot: { table: "medical", rolls: 2 },
         enemy: { id: "zombie_spitter", chance: 0.5 },
       },
@@ -790,10 +828,20 @@ const MAPS = {
         guaranteed: [["circuit", 1]],
         enemy: { id: "raider", chance: 0.5 },
       },
+      vault_helix: {
+        name: "Zamknięty Gabinet Inżynierów Helix",
+        desc: "Zabezpieczony gabinet z ciężkimi zamkami. Na biurku leżą zapieczętowane dokumenty. Potrzebna karta fabryki Helix.",
+        exits: ["storage"],
+        keyLock: "helix",
+        keyLabel: "Karta Fabryki Helix",
+        loot: { table: "vault_rare", rolls: 3 },
+        guaranteed: [["doc_skill", 1]],
+        codeChance: 0.15,
+      },
       storage: {
         name: "Magazyn Helix",
         desc: "Półki z zapasami sięgają sufitu. Większość jest pusta, ale nie wszystko.",
-        exits: ["assembly", "yard", "control"],
+        exits: ["assembly", "yard", "control", "vault_helix"],
         loot: { table: "supply", rolls: 2 },
       },
       control: {

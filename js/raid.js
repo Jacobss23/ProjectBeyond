@@ -637,10 +637,32 @@ function enterNode(id) {
   render();
 }
 
+// === SEKCJA: ZAMKNIĘTE POMIESZCZENIA (karty dostępu) ===
+// Pomieszczenie z keyLock jest zamknięte, dopóki save.openedRooms[keyLock] nie jest ustawione.
+function roomLocked(node) {
+  return !!(node && node.keyLock && !((save.openedRooms || {})[node.keyLock]));
+}
+
+// Otwiera pomieszczenie kartą z plecaka. Karta jest zużywana jednorazowo i znika.
+function useKeycard() {
+  const node = MAP.nodes[raid.node];
+  if (!node || raid.over || !roomLocked(node)) return;
+  const inst = raid.bag.items.find((i) => ITEMS[i.id] && ITEMS[i.id].keyFor === node.keyLock);
+  if (!inst) return log(`Potrzebna: ${node.keyLabel || "karta dostępu"}.`, "warn");
+  consumeInst(raid.bag, inst, 1);
+  save.openedRooms = save.openedRooms || {};
+  save.openedRooms[node.keyLock] = true;
+  writeSave(save);
+  log(`Karta zadziałała. ${node.name} jest otwarte. Karta zniknęła.`, "hit");
+  edgeGlow("loot");
+  render();
+}
+
 function search() {
   const node = MAP.nodes[raid.node];
   if (raid.enemy || raid.stealthMode || qteActive || raid.over || raid.searched[raid.node] || !node.loot) return;
   if (raid.searching) return;
+  if (roomLocked(node)) return log("Drzwi są zamknięte. Potrzebna karta dostępu.", "warn");
   if (!tick("search")) return render();
 
   // Przeszukiwanie: bazowo 3 s, z rozwojem skilla Przeszukiwanie schodzi do 1 s (poziom 15)
@@ -697,6 +719,10 @@ function doSearch(nodeId) {
     }
   }
 
+  if (node.codeChance && Math.random() < node.codeChance) {
+    found.push({ id: "access_code", qty: 1 });
+    log("W szufladzie znajdujesz kod dostępu!", "tip");
+  }
   addGround(nodeId, found);
   log(`Przeszukujesz: ${node.name}. Znalezione: ${found.map((r) => ITEMS[r.id]?.name || r.id).join(", ") || "nic"}.`);
   edgeGlow("search");
@@ -1413,6 +1439,13 @@ function healWith(id) {
 function useInst(inst) {
   const it = ITEMS[inst.id];
   if (!it || raid.over) return;
+  if (it.skillDoc) {
+    const sid = applySkillDoc(save, it.skillDoc);
+    consumeInst(raid.bag, inst, 1);
+    writeSave(save);
+    log(sid ? `${it.name}: +${it.skillDoc} poziomy w umiejętności „${(SKILLS[sid] || {}).name || sid}”.` : "Nie ma już umiejętności do rozwinięcia.", "hit");
+    return render();
+  }
 
   let curedMsg = null;
   if (typeof cureBodyEffect === "function") {
@@ -1950,7 +1983,8 @@ function renderActions(node = MAP.nodes[raid.node]) {
     if (p) slots[p] = spec;
     else extra.push(spec);
   };
-  if (node.loot && !raid.searched[raid.node] && !raid.searching) place({ label: "[X] Przeszukaj", fn: search, cls: "ghost" }, [1, 7, 8, 9]);
+  if (roomLocked(node)) place({ label: `[K] Otwórz: ${node.keyLabel || "karta dostępu"}`, fn: useKeycard, cls: "primary-btn" }, [1, 7, 8, 9]);
+  if (node.loot && !raid.searched[raid.node] && !raid.searching && !roomLocked(node)) place({ label: "[X] Przeszukaj", fn: search, cls: "ghost" }, [1, 7, 8, 9]);
   const task = activeTaskQuest();
   if (task) place({ label: `[T] Wykonaj zadanie: ${task.task.label}`, fn: openTask, cls: "primary-btn" }, [3, 7, 8, 9]);
   if (MAP.evac && raid.node === MAP.evac.lever.node && !raid.evacOpen) {
@@ -2836,6 +2870,13 @@ function testSkipMars() {
       if (ITEMS[id]) addToContainer(save.stash, id, qty || 1);
     });
   });
+  // Testowy magazyn: maksymalny poziom modułu Stash (skarbiec orbitalny)
+  if (save.ship && save.ship.modules && save.ship.modules.Stash) {
+    const stashDef = (typeof SHIP_MODULES !== "undefined" ? SHIP_MODULES : []).find((m) => m.id === "Stash");
+    save.ship.modules.Stash.level = stashDef ? stashDef.maxLevel : 5;
+  }
+  // Karta dostępu do skarbca na Kopule Tytana (do testów pomieszczenia)
+  if (ITEMS.card_dome) addToContainer(save.stash, "card_dome", 1);
   // Testowe kontenery na start: karton, apteczka i skrzynia na broń
   ["cardboard_box", "medicine_case", "weapon_case"].forEach((id) => {
     if (ITEMS[id]) addToContainer(save.stash, id, 1);
