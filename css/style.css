@@ -1981,3 +1981,8 @@ button.sm.trash-btn svg { display: block; }
   0%, 100% { box-shadow: 0 0 8px 2px #facc15, 0 0 18px 4px rgba(250, 204, 21, 0.45); }
   50% { box-shadow: 0 0 18px 6px #fde047, 0 0 36px 12px rgba(253, 224, 71, 0.8); }
 }
+
+/* === v.1.80.5: karta dostępu w jednym, złotym kolorze (ramka, tło, ikona, nazwa) === */
+.item.it-key,
+.item.it-key.it-has-icon { border-color: #facc15; background-color: rgba(250, 204, 21, 0.28); color: #fde047; }
+.item.it-key .it-label, .item.it-key .it-icon { color: #fde047; }
