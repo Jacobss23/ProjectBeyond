@@ -556,6 +556,14 @@ function useMedicalInHideout(inst, view) {
     logText += `Przywrócono +${healVal} HP (Stan: ${save.hp}/${save.maxHp}). `;
   }
 
+  // 2a. Skrzynia z amunicją: rozpakowanie do magazynu
+  if (it.unpackAmmo) {
+    const drops = unpackAmmoCrate();
+    drops.forEach((d) => addToContainer(save.stash, d.id, d.qty));
+    used = true;
+    logText += `Rozpakowano: ${drops.map((d) => `${ITEMS[d.id].name} x${d.qty}`).join(", ")}. `;
+  }
+
   // 2b. Dokumentacja umiejętności: +poziomy losowej umiejętności
   if (it.skillDoc) {
     const sid = applySkillDoc(save, it.skillDoc);

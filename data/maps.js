@@ -27,6 +27,7 @@ const LOOT = {
     { id: "medkit", w: 10, min: 1, max: 1 },
     { id: "circuit", w: 10, min: 1, max: 1 },
     { id: "pistol", w: 5, min: 1, max: 1 },
+    { id: "ammo_crate", w: 3, min: 1, max: 1 },
   ],
   medical: [
     { id: "nanite_serum", w: 6, min: 1, max: 1 },
@@ -83,6 +84,7 @@ const LOOT = {
     { id: "ruby_shard", w: 3, min: 1, max: 1 },
     { id: "diamond_ring", w: 1, min: 1, max: 1 },
     { id: "card_helix", w: 1, min: 1, max: 1 },
+    { id: "ammo_crate", w: 3, min: 1, max: 1 },
   ],
   boss_archive: [
     { id: "quantum_core", w: 6, min: 1, max: 1 },
@@ -107,6 +109,7 @@ const LOOT = {
     { id: "pistol", w: 10, min: 1, max: 1 },
     { id: "ration", w: 15, min: 1, max: 2 },
     { id: "data_chip", w: 5, min: 1, max: 1 },
+    { id: "ammo_crate", w: 3, min: 1, max: 1 },
   ],
   // Tytan specyficzne tabele lootu
   titan_infected: [
@@ -139,6 +142,7 @@ const LOOT = {
     { id: "vest_kevlar", w: 10, min: 1, max: 1 },
     { id: "rifle_orbit", w: 4, min: 1, max: 1 },
     { id: "card_vega", w: 1, min: 1, max: 1 },
+    { id: "ammo_crate", w: 3, min: 1, max: 1 },
   ],
   vault_rare: [
     { id: "ruby_shard", w: 4, min: 1, max: 1 },

@@ -1974,3 +1974,10 @@ button.sm.trash-btn svg { display: block; }
 
 /* === v1.80.0: numer wersji w lewym dolnym rogu (tylko numer) === */
 #build-version { position: fixed; left: 8px; bottom: 6px; font-family: monospace; font-size: 11px; color: #94a3b8; opacity: 0.6; pointer-events: none; z-index: 9999; }
+
+/* === v1.80.4: karty dostępu świecą się (wyróżnienie) === */
+.item.it-key { box-shadow: 0 0 10px 2px #facc15, 0 0 22px 6px rgba(250, 204, 21, 0.55); animation: keyGlow 1.4s ease-in-out infinite; z-index: 2; }
+@keyframes keyGlow {
+  0%, 100% { box-shadow: 0 0 8px 2px #facc15, 0 0 18px 4px rgba(250, 204, 21, 0.45); }
+  50% { box-shadow: 0 0 18px 6px #fde047, 0 0 36px 12px rgba(253, 224, 71, 0.8); }
+}

@@ -228,7 +228,7 @@ function renderGrid(view) {
     const [w, h] = itemDims(inst);
     const d = document.createElement("div");
     const isSel = selected && selected.uid === inst.uid;
-    d.className = `item it-${it.type}${it.tone ? ` it-tone-${it.tone}` : ""}${it.category ? ` it-cat-${it.category}` : ""}${isSel ? " selected" : ""}${it.quest ? " item-quest" : ""}`;
+    d.className = `item it-${it.type}${it.tone ? ` it-tone-${it.tone}` : ""}${it.category ? ` it-cat-${it.category}` : ""}${isSel ? " selected" : ""}${it.quest ? " item-quest" : ""}${it.keyFor ? " it-key" : ""}`;
     d.style.cssText = `left:${inst.x * CELL}px;top:${inst.y * CELL}px;width:${w * CELL}px;height:${h * CELL}px;`;
     d.title = (it.quest ? `[PRZEDMIOT FABULARNY // QUEST] ${it.name}` : it.name) + (inst.inner ? ` (w środku: ${inst.inner.items.length})` : "");
 

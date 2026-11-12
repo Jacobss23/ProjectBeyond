@@ -147,6 +147,7 @@ const ITEMS = {
   rail_cannon: { name: "Działo szynowe Ares", type: "weapon", caliber: "40 mm szynowe", size: [4, 2], value: 4200, dmg: [38, 55], acc: 0.86, ammo: "ammo_rail", category: "heavy", rarity: "rare" },
   armor_singularity: { name: "Pancerz Osobliwości", type: "armor", size: [3, 3], value: 4500, def: 12, rarity: "rare" },
   doc_skill: { name: "Dokumentacja umiejętności", type: "consumable", size: [1, 1], value: 2500, skillDoc: 3, rarity: "rare", tone: "heal", use: "Po przeczytaniu dodaje 3 pełne poziomy losowej umiejętności, która nie jest jeszcze na maksimum." },
+  ammo_crate: { name: "Skrzynia z amunicją", type: "consumable", size: [2, 2], value: 320, unpackAmmo: true, tone: "heal", use: "Otwierasz skrzynię: w środku trzy różne rodzaje amunicji (60–100% pełnego stosu)." },
 };
 
 // === SEKCJA: ZESTAWY STARTOWE ===

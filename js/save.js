@@ -367,6 +367,14 @@ function grantSkillXp(s, skillId, amount) {
   return ups;
 }
 
+// Skrzynia z amunicją: 3 różne rodzaje amunicji, każdy stos to 60–100% pełnego stosu.
+function unpackAmmoCrate() {
+  const ids = Object.keys(ITEMS).filter((k) => ITEMS[k].type === "ammo");
+  const picked = [];
+  while (picked.length < 3 && ids.length) picked.push(ids.splice(Math.floor(Math.random() * ids.length), 1)[0]);
+  return picked.map((id) => ({ id, qty: Math.max(1, Math.round(ITEMS[id].stack * (0.6 + Math.random() * 0.4))) }));
+}
+
 // Dokumentacja umiejętności: +n pełnych poziomów losowej umiejętności, która nie jest na maksimum. Zwraca id umiejętności.
 function applySkillDoc(s, n) {
   s.skills = s.skills || {};

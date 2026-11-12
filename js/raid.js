@@ -1439,6 +1439,13 @@ function healWith(id) {
 function useInst(inst) {
   const it = ITEMS[inst.id];
   if (!it || raid.over) return;
+  if (it.unpackAmmo) {
+    const drops = unpackAmmoCrate();
+    consumeInst(raid.bag, inst, 1);
+    addGround(raid.node, drops);
+    log(`${it.name}: ${drops.map((d) => `${ITEMS[d.id].name} x${d.qty}`).join(", ")} (leżą na ziemi).`, "hit");
+    return render();
+  }
   if (it.skillDoc) {
     const sid = applySkillDoc(save, it.skillDoc);
     consumeInst(raid.bag, inst, 1);
