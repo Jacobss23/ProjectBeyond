@@ -7,6 +7,7 @@ let curTrader = TRADERS[0].id;
 let openModule = null;
 let stashView = null;
 let loadView = null;
+let pocketView = null;
 let sellView = null;
 let traderView = null;
 let traderContainer = null;
@@ -40,6 +41,13 @@ function mountContainers() {
     canMoveIn: (inst) => !ITEMS[inst.id]?.container,
     onSelect: () => renderInvInfo(),
     onQuickMove: (inst) => quickFromInventory(loadView, stashView, inst),
+  });
+  pocketView = mountGrid($("pocket-grid"), save.pocket, {
+    ...common,
+    containerName: "Personalny Sejf",
+    canMoveIn: (inst) => !ITEMS[inst.id]?.container,
+    onSelect: () => renderInvInfo(),
+    onQuickMove: (inst) => quickFromInventory(pocketView, stashView, inst),
   });
   sellView = mountGrid($("sell-grid"), save.stash, {
     ...common,
@@ -475,7 +483,7 @@ function renderInvInfo() {
   const sel = getSelected();
   const inLoad = sel && sel.view === loadView;
   const buttons = [];
-  if (sel && (sel.view === stashView || sel.view === loadView)) {
+  if (sel && (sel.view === stashView || sel.view === loadView || sel.view === pocketView)) {
     buttons.push(btn("Obróć (R)", () => rotateSelected(), "ghost"));
     buttons.push(btn(inLoad ? "Do magazynu" : "Do zestawu", () => moveBetween(sel.view, inLoad ? stashView : loadView, sel.inst)));
     if (ITEMS[sel.inst.id]?.container) buttons.push(btn("Otwórz kontener", () => openContainer(sel.view, sel.inst), "primary-btn"));
@@ -525,6 +533,20 @@ function renderInvInfo() {
       const isMedicalOrUsable = it.heal || it.cures || it.buff || it.type === "medical" || ["ration", "bandage", "hemostatic", "bruise_ointment", "splint", "stim_bleedstop", "saturn_cola", "medkit", "morphine", "decontam_kit"].includes(sel.inst.id);
       if (isMedicalOrUsable) {
         buttons.push(btn("Użyj (Leczenie)", () => useMedicalInHideout(sel.inst, sel.view), "primary-btn"));
+      }
+      // Plecak: zakładany w slocie Plecak, zmienia rozmiar zestawu na rajd
+      if (it.type === "backpack") {
+        buttons.push(btn("Załóż plecak", () => {
+          if (equipItem(save, sel.inst.id, "backpack", sel.view.cont, sel.inst)) {
+            persist();
+            mountContainers();
+            renderAll();
+          } else say("Nie można założyć plecaka (slot zajęty albo brak miejsca na stary).", "warn");
+        }, "primary-btn"));
+      }
+      // Skrzynia z amunicją i dokumentacja umiejętności też otwierają się w schronie
+      if (it.unpackAmmo || it.skillDoc) {
+        buttons.push(btn(it.unpackAmmo ? "Otwórz skrzynię" : "Przeczytaj dokumentację", () => useMedicalInHideout(sel.inst, sel.view), "primary-btn"));
       }
     }
   }
@@ -799,7 +821,7 @@ function renderTrader() {
   `;
   const mPct = Math.round(marketMult(tr.id) * 100 - 100);
   const marketTxt = `<div class="hint" style="margin-top:4px;">Rynek dziś: ${mPct >= 0 ? "+" : ""}${mPct}% do cen zakupu</div>`;
-  descEl.innerHTML = `<div>${tr.desc}${discountText}</div>${marketTxt}${repBarHtml}`;
+  descEl.innerHTML = `<div>${tr.desc}${discountText}</div><div style="color:#94a3b8;font-size:0.8rem">Lokalizacja: ${tr.location || "nieznana"}</div>${marketTxt}${repBarHtml}`;
   const linkRow = document.createElement("div");
   linkRow.className = "btn-row";
   linkRow.style.marginTop = "6px";
@@ -3082,3 +3104,31 @@ function progDetail(id) {
     det.appendChild(btn("Otwórz mapę", () => showMapDetail(id), "primary-btn"));
   }
 }
+
+
+// === SEKCJA: TERMINAL POKŁADOWY (wpisywanie komend) ===
+// Terminal przyjmuje dowolny tekst, ale reaguje tylko na jedną komendę.
+function terminalCommand(raw) {
+  const text = (raw || "").trim();
+  if (!text) return;
+  if (text.toLowerCase() !== "devtest2312") {
+    say(`Nieznana komenda: ${text}`, "warn");
+    return;
+  }
+  const grants = [["rail_cannon", 1], ["armor_singularity", 1], ["ammo_rail", 10], ["ammo_rail", 10], ["ammo_rail", 10], ["ammo_rail", 10], ["medkit", 4]];
+  const failed = [];
+  grants.forEach(([id, qty]) => {
+    const left = addToContainer(save.stash, id, qty);
+    if (left) failed.push(`${ITEMS[id]?.name || id}${left > 1 ? ` x${left}` : ""}`);
+  });
+  persist();
+  renderAll();
+  say(failed.length ? `Dostarczono, ale brak miejsca na: ${failed.join(", ")}.` : "ACCESS GRANTED: działo szynowe, pancerz osobliwości, 4 stosy amunicji szynowej, 4 apteczki.", failed.length ? "warn" : "hit");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.target && e.target.id === "term-input" && e.key === "Enter") {
+    terminalCommand(e.target.value);
+    e.target.value = "";
+  }
+});

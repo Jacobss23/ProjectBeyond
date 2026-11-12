@@ -6,7 +6,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Klinika w kopule. Vane pochyla się nad stołem zawalonym probówkami i przeciera oczy. Gdy się łączysz, unosi wzrok z wyraźnym zmęczeniem."
+    "text": "Klinika na stacji Exodus Prime. Vane pochyla się nad stołem zawalonym probówkami i przeciera oczy. Gdy się łączysz, unosi wzrok z wyraźnym zmęczeniem."
    },
    {
     "k": "t",
@@ -1774,7 +1774,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Połączenie wideo z kliniką w kopule Nowego Ereb. Na ścianie wisi zdjęcie szpitala sprzed czasów Szeptu. Vane, w zakrwawionym fartuchu, klnie cicho nad jakimś pudełkiem bez wieka."
+    "text": "Połączenie wideo z kliniką na stacji Exodus Prime. Na ścianie wisi zdjęcie szpitala sprzed czasów Szeptu. Vane, w zakrwawionym fartuchu, klnie cicho nad jakimś pudełkiem bez wieka."
    },
    {
     "k": "t",
@@ -2070,7 +2070,7 @@ const MAIN_DIALOGS = {
   "offer": [
    {
     "k": "n",
-    "text": "Warsztat craftingu w kopule. Narzędzia i części leżą wszędzie. Nadia stoi przy stole z listą i liczy coś na palcach, wyraźnie zirytowana."
+    "text": "Warsztat craftingu na stacji Exodus Prime. Narzędzia i części leżą wszędzie. Nadia stoi przy stole z listą i liczy coś na palcach, wyraźnie zirytowana."
    },
    {
     "k": "t",

@@ -4,6 +4,7 @@ const TRADERS = [
     id: "trader1",
     name: "Dr Jana Vane - Sanitariuszka Polowa",
     desc: "Specjalista medycyny ratunkowej i epidemiolog. Skupuje próbki biologiczne i zaopatruje w leki.",
+    location: "Exodus Prime",
     buyMult: 1.4,
     sellMult: 1.0,
     fixedPrices: { ration: 400, water: 300 },
@@ -18,6 +19,7 @@ const TRADERS = [
     id: "trader2",
     name: "Sierżant Karras - Rusznikarz",
     desc: "Weteran wojen kolonialnych. Dostarcza broń, amunicję oraz modyfikacje taktyczne.",
+    location: "Exodus Prime",
     buyMult: 1.35,
     sellMult: 0.9,
     color: "#f59e0b", // Amber
@@ -31,19 +33,22 @@ const TRADERS = [
     id: "trader3",
     name: "Inżynier Borys - Odzysk Komponentów",
     desc: "Zajmuje się demontażem technologii i rzadkimi podzespołami instalacji podtrzymywania życia.",
+    location: "Exodus Prime",
     buyMult: 1.5,
+    fixedPrices: { pm_034x: 800, pm_g33: 1450 },
     sellMult: 1.15,
     color: "#06b6d4", // Cyan
         stock: {
       0: ["scrap", "wrench", "broken_drone"],
-      1: ["fuel_cell", "platinum_wire", "geiger"],
-      2: ["titan_filter", "titan_fusion_core"],
+      1: ["fuel_cell", "platinum_wire", "geiger", "pm_034x"],
+      2: ["titan_filter", "titan_fusion_core", "pm_g33"],
     },
   },
   {
     id: "trader4",
     name: "Kwatermistrz Nadia - Pancerze i Zaopatrzenie",
     desc: "Oficer zaopatrzeniowy wolnych kolonii. Handluje sprzętem ochronnym i kombinezonami.",
+    location: "Exodus Prime",
     buyMult: 1.45,
     sellMult: 1.0,
     color: "#6366f1", // Indigo
@@ -57,6 +62,7 @@ const TRADERS = [
     id: "trader5",
     name: "Haker Val - Sieci i Wywiad",
     desc: "Kryptograf i analityk danych. Szuka czarnych skrzynek, chipów taktycznych i układów szyfrujących.",
+    location: "Exodus Prime",
     buyMult: 1.6,
     sellMult: 1.2,
     color: "#8b5cf6", // Violet
@@ -71,6 +77,7 @@ const TRADERS = [
     id: "trader6",
     name: "Kapitan Sławiński - Dowódca Straży",
     desc: "Dowódca jednostki porządkowej. Zleca czyszczenie niebezpiecznych stref i polowanie na mutanty.",
+    location: "Tau Ceti e (kordon południowy)",
     buyMult: 1.4,
     sellMult: 1.0,
     color: "#ef4444", // Crimson
@@ -84,6 +91,7 @@ const TRADERS = [
     id: "trader7",
     name: "Profesor Thorne - Geolog Głębinowy",
     desc: "Badacz minerałów Tytana. Skupuje czystą rudę, xenonite i Hel-3. Sprzedaje Rękawicę Wydobywczą.",
+    location: "Tau Ceti e (osada kolonistów)",
     buyMult: 1.3,
     sellMult: 1.1,
     color: "#eab308", // Gold
@@ -98,6 +106,7 @@ const TRADERS = [
     id: "trader8",
     name: "Szturmowiec Jax - Szabrownik Sektora",
     desc: "Handlarz czarnorynkowy i kolekcjoner artefaktów. Odkupuje ultra-rzadkie kosztowności po najwyższych cenach.",
+    location: "Exodus Prime",
     buyMult: 1.7,
     sellMult: 1.3,
     color: "#ec4899", // Magenta
@@ -1067,7 +1076,7 @@ const MAIN_QUESTS = [
       traderId: "trader6",
       isMain: true,
       title: "Patrol Zachodni",
-      desc: "Sławiński utrzymuje posterunki na zachodnich wejściach do kopuły, ale każdy patrol wraca z mniejszą liczbą ludzi. Potrzebuje amunicji, leków i kogoś, kto wróci z informacją o tym, co dzieje się za kolejnymi śluzami. Bez tego kopuła zostanie otoczona. Dostarcz 60x Amunicja 9mm, 4x Apteczka i 1x Instrukcja serwisowa. Odczytaj terminal lądowiska w kopule.",
+      desc: "Sławiński dowodzi kordonem na Tau Ceti e, a jego posterunki obsadzają zachodnie wejścia do kopuły, ale każdy patrol wraca z mniejszą liczbą ludzi. Potrzebuje amunicji, leków i kogoś, kto wróci z informacją o tym, co dzieje się za kolejnymi śluzami. Bez tego kopuła zostanie otoczona. Dostarcz 60x Amunicja 9mm, 4x Apteczka i 1x Instrukcja serwisowa. Odczytaj terminal lądowiska w kopule.",
       req: [
           {
               id: "ammo9",

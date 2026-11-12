@@ -100,6 +100,8 @@
             <div class="panel">
               <h3>Zestaw na Rajd (Plecak) <small id="load-info"></small></h3>
               <div id="load-grid"></div>
+              <h4 style="margin:10px 0 4px;">Personalny Sejf <small>4 sloty, nie znika po śmierci</small></h4>
+              <div id="pocket-grid"></div>
               <div class="btn-row" style="margin-top: 8px">
                 <button class="sm" onclick="repeatLoadout()">Powtórz ostatni</button>
                 <button class="sm ghost" onclick="clearLoadout()">Odłóż wszystko</button>
@@ -127,12 +129,12 @@
           <div class="panel scroll">
             <h3>Oferta Sklepu (Kup) <small style="color:#94a3b8;">[Siatka przedmiotów]</small></h3>
             <div id="trader-grid"></div>
+            <div id="sell-info" class="item-info" style="margin-top:10px;"></div>
           </div>
           <div class="panel scroll">
             <h3>Sprzedaj (z magazynu)</h3>
             <div id="sell-grid"></div>
           </div>
-          <div id="sell-info" class="panel item-info"></div>
         </div>
 
         <!-- Zlecenia wybranego handlarza bezpośrednio w oknie handlu -->
@@ -231,6 +233,10 @@
         <span class="term-prompt">&gt; NASŁUCH AKTYWNY</span><span class="term-cursor">_</span>
       </div>
       <div id="log" class="log small"></div>
+      <div class="term-input-row" style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+        <span class="term-prompt">&gt;</span>
+        <input id="term-input" type="text" autocomplete="off" spellcheck="false" placeholder="wpisz komendę i zatwierdź Enterem" style="flex:1; background:transparent; border:none; border-bottom:1px solid #334155; color:inherit; font-family:monospace; padding:4px 2px; outline:none;" />
+      </div>
     </div>
 
     <!-- Skrypty bazy i silnika -->
@@ -253,6 +259,6 @@
     <script src="js/daynight.js"></script>
     <script src="js/hideout.js"></script>
   <script src="js/cachebtn.js"></script>
-  <div id="build-version" aria-hidden="true">1.80.6</div>
+  <div id="build-version" aria-hidden="true">1.82.0</div>
 </body>
 </html>

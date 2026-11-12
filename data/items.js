@@ -148,6 +148,9 @@ const ITEMS = {
   armor_singularity: { name: "Pancerz Osobliwości", type: "armor", size: [3, 3], value: 4500, def: 12, rarity: "rare" },
   doc_skill: { name: "Dokumentacja umiejętności", type: "consumable", size: [1, 1], value: 2500, skillDoc: 3, rarity: "rare", tone: "heal", use: "Po przeczytaniu dodaje 3 pełne poziomy losowej umiejętności, która nie jest jeszcze na maksimum." },
   ammo_crate: { name: "Skrzynia z amunicją", type: "consumable", size: [2, 2], value: 320, unpackAmmo: true, tone: "heal", use: "Otwierasz skrzynię: w środku trzy różne rodzaje amunicji (60–100% pełnego stosu)." },
+  pm_034x: { name: "Magazyn Przenośny PM-034X", type: "backpack", size: [3, 3], value: 533, bagRows: 8, use: "Założony w slocie Plecak: zestaw na rajd rośnie do 8 wierszy." },
+  pm_g33: { name: "Powiększony magazyn przenośny PM-G33", type: "backpack", size: [3, 3], value: 966, bagRows: 10, use: "Założony w slocie Plecak: zestaw na rajd rośnie do 10 wierszy." },
+  pm_military_x23: { name: "Militarny magazyn przenośny PM-MILITARY_X23", type: "backpack", size: [3, 3], value: 1800, bagRows: 12, rarity: "rare", use: "Założony w slocie Plecak: zestaw na rajd rośnie do 12 wierszy." },
 };
 
 // === SEKCJA: ZESTAWY STARTOWE ===
@@ -197,6 +200,7 @@ const RECIPES = [
   { id: "r_plate", module: "Crafting", minLevel: 3, name: "Płyta ciężka Titan", in: [["armor_vest", 1], ["scrap", 6], ["circuit", 2]], out: ["plate_heavy", 1] },
   { id: "r_hack", module: "Crafting", minLevel: 3, name: "Deck hakerski", in: [["neural_chip", 1], ["circuit", 3], ["wires", 2]], out: ["hack_deck", 1] },
   { id: "r_rifle_orbit", module: "Crafting", minLevel: 3, name: "Karabin szturmowy Orbit", in: [["smg", 1], ["scrap", 6], ["circuit", 3]], out: ["rifle_orbit", 1] },
+  { id: "r_pm_military", module: "Crafting", minLevel: 3, name: "Militarny magazyn PM-MILITARY_X23", in: [["pm_g33", 2], ["scrap", 8], ["titan_diamond", 1], ["golden_chalice", 1]], out: ["pm_military_x23", 1] },
 ];
 
 if (typeof window !== "undefined") {

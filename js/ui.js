@@ -100,6 +100,7 @@ function renderEquipmentSlotsUI(box, isCompact = false) {
   }
 
   slots.push({ id: "melee", label: "Biała", fullLabel: "Broń Biała", icon: "🗡️", item: getItemId(curSave.equipped.melee) });
+  slots.push({ id: "backpack", label: "Plecak", fullLabel: "Plecak (większy zestaw na rajd)", icon: "🎒", item: getItemId(curSave.equipped.backpack) });
 
   box.className = isCompact ? "eq-slots-container eq-slots-raid" : "eq-slots-container";
 

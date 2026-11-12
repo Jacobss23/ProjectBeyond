@@ -161,8 +161,13 @@ function normalizeSave(s) {
   s.stash.h = stashDim[1];
 
   s.loadout = toContainer(s.loadout, 8, st.bagRows, false);
+  // Pocket safe: 4 sloty (2x2), przedmioty przeżywają śmierć (nie są czyszczone w finish(false))
+  s.pocket = toContainer(s.pocket, 2, 2, false);
+  s.pocket.w = 2;
+  s.pocket.h = 2;
   s.loadout.w = Math.max(s.loadout.w, 8);
   s.loadout.h = Math.max(s.loadout.h, st.bagRows);
+  applyBackpackSize(s);
 
   if (!s.kitGiven) {
     (KITS[s.kit] || []).forEach(([id, qty]) => addToContainer(s.loadout, id, qty));
@@ -193,6 +198,7 @@ function loadSave() {
 }
 
 function writeSave(s) {
+  applyBackpackSize(s);
   localStorage.setItem(`saveSlot_${getSlot()}`, JSON.stringify(s));
 }
 
@@ -401,9 +407,39 @@ function hasHolster(s) {
   );
 }
 
+// Plecak (slot Plecak): wysokość zestawu na rajd zależy od założonego plecaka.
+// Bazowo: cechy/planeta (playerStats). Przedmioty, które wypadają poza nowy rozmiar, wracają do magazynu.
+function backpackRowsFor(s) {
+  const eq = s.equipped && s.equipped.backpack;
+  const id = eq ? (typeof eq === "string" ? eq : eq.id) : null;
+  if (id && ITEMS[id] && ITEMS[id].bagRows) return ITEMS[id].bagRows;
+  return playerStats(s).bagRows;
+}
+
+function applyBackpackSize(s) {
+  if (!s || !s.loadout) return;
+  const rows = backpackRowsFor(s);
+  s.loadout.w = Math.max(s.loadout.w || 8, 8);
+  s.loadout.h = rows;
+  if (!s.loadout.items) return;
+  const keep = [];
+  s.loadout.items.forEach((o) => {
+    const sz = ITEMS[o.id] ? ITEMS[o.id].size : [1, 1];
+    const hh = o.r ? sz[0] : sz[1];
+    if ((o.y || 0) + hh <= rows) {
+      keep.push(o);
+    } else if (o.inner) {
+      placeInstance(s.stash, o);
+    } else {
+      addToContainer(s.stash, o.id, o.qty || 1);
+    }
+  });
+  s.loadout.items = keep;
+}
+
 function equipItem(s, itemId, slot, fromCont, inst) {
   if (!s || !ITEMS[itemId]) return false;
-  s.equipped = s.equipped || { armor: null, ranged: null, ranged2: null, melee: null, activeWeapon: "ranged" };
+  s.equipped = s.equipped || { armor: null, ranged: null, ranged2: null, melee: null, backpack: null, activeWeapon: "ranged" };
   const it = ITEMS[itemId];
 
   let valid = false;
@@ -411,6 +447,7 @@ function equipItem(s, itemId, slot, fromCont, inst) {
   if (slot === "ranged" && it.type === "weapon" && it.ammo) valid = true;
   if (slot === "ranged2" && it.type === "weapon" && it.ammo && hasHolster(s)) valid = true;
   if (slot === "melee" && it.type === "weapon" && !it.ammo) valid = true;
+  if (slot === "backpack" && it.type === "backpack") valid = true;
 
   if (!valid) return false;
 

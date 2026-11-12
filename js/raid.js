@@ -26,6 +26,7 @@ let raid = null;
 let combatBagOpen = false;
 let uiMode = null;
 let bagView = null;
+let pocketView = null;
 let groundView = null;
 const tipsShown = {};
 
@@ -199,6 +200,11 @@ function initRaid() {
 }
 
 function mountRaidBag() {
+  pocketView = mountGrid($("pocket-grid"), save.pocket, {
+    canMoveIn: canMoveItems,
+    onSelect: renderInfo,
+    onChange: onGridChange,
+  });
   bagView = mountGrid($("bag-grid"), raid.bag, {
     canMoveIn: canMoveItems,
     onMoveIn: (inst) => gotItem(inst),
@@ -1389,6 +1395,11 @@ function winCombat() {
   raid.autoFighting = false;
   raid.autoFightPaused = false;
   raid.kills++;
+  // Nagroda za Matkę Archiwum: Militarny magazyn PM-MILITARY_X23
+  if (e.boss && (params.get("map") || "") === "titan_archive") {
+    if (addToContainer(raid.bag, "pm_military_x23", 1)) addGround(raid.node, [{ id: "pm_military_x23", qty: 1 }]);
+    log("Nagroda za Matkę Archiwum: Militarny magazyn PM-MILITARY_X23.", "hit");
+  }
 
   let xp = Math.round(e.xp * st.xpMult);
   if (raid.usedAutoFight) {
@@ -1621,7 +1632,8 @@ function finish(success) {
         save.questCarry[q.id] = save.questCarry[q.id] || {};
         q.req.forEach((r) => {
           // liczy się tylko to, co ZNALEZIONO w tym rajdzie (nie to, co przyniesiono ze schronu) i co jest w plecaku
-          const have = Math.min(countItem(raid.bag, r.id), (raid.found || {})[r.id] || 0);
+          // Pocket safe też się liczy przy udanej ewakuacji (przedmioty z pocket są wyniesione)
+          const have = Math.min(countItem(raid.bag, r.id) + countItem(save.pocket, r.id), (raid.found || {})[r.id] || 0);
           if (have > 0) {
             const prev = save.questCarry[q.id][r.id] || 0;
             save.questCarry[q.id][r.id] = Math.min(r.qty, prev + have);
@@ -1651,6 +1663,7 @@ function finish(success) {
           save.kills[k.slice(5)] = true;
         });
     } else {
+      // Pocket safe (save.pocket) celowo nie jest czyszczony. Zlecenia z ewakuacją (questCarry) nie są zapisywane po śmierci.
       save.deaths++;
       // Po śmierci tracisz też przedmioty założone na sobie (pancerz, broń), nie tylko plecak z zestawem
       save.equipped = { armor: null, ranged: null, ranged2: null, melee: null, activeWeapon: "ranged" };
